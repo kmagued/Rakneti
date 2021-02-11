@@ -18,17 +18,9 @@ export const tryLocalSignin = () => async (dispatch) => {
   });
 };
 
-export const authenticate = (email, password) => async (dispatch) => {
-  if (email && password) {
-    dispatch({
-      type: AUTHENTICATE,
-      token: email,
-    });
-    // AsyncStorage.setItem('user', email);
-  } else {
-    dispatch({
-      type: ERROR,
-      error: 'Invalid email or password',
-    });
-  }
+export const authenticate = (token) => async (dispatch) => {
+  dispatch({
+    type: AUTHENTICATE,
+    token,
+  });
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import auth from '@react-native-firebase/auth';
 import {SafeAreaView, StyleSheet, View, TouchableOpacity} from 'react-native';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
@@ -6,15 +7,44 @@ import Input from '../components/Input';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {authenticate} from '../store/actions/users';
+import {ActivityIndicator} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {
     email: 'kmagued@gmail.com',
     password: 'mypass',
+    error: null,
+    loading: false,
+  };
+
+  loginHandler = (email, password) => {
+    this.setState({loading: true});
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
+        this.props.authenticate(res.user.uid);
+      })
+      .catch((error) => {
+        if (error.code === 'auth/user-not-found') {
+          this.setState({
+            error: 'User not found',
+            loading: false,
+          });
+        }
+        if (
+          error.code === 'auth/invalid-email' ||
+          error.code === 'auth/wrong-password'
+        ) {
+          this.setState({
+            error: 'Invalid email or password',
+            loading: false,
+          });
+        }
+      });
   };
 
   render() {
-    const {email, password} = this.state;
+    const {email, password, error, loading} = this.state;
 
     return (
       <SafeAreaView style={styles.screen}>
@@ -34,32 +64,35 @@ class HomeScreen extends React.Component {
             icon={<Ionicons name="md-mail" size={18} />}
             placeholder="Email"
             autoCapitalize="none"
-            value={this.state.email}
+            value={email}
             email
             onChangeText={(email) => {
-              this.setState({email});
+              this.setState({email, error: ''});
             }}
-            error={this.props.emailError}
           />
           <Input
             icon={<Ionicons name="md-lock-closed" size={18} />}
             placeholder="Password"
-            value={this.state.password}
+            value={password}
             secureTextEntry
             onChangeText={(password) => {
-              this.setState({password});
+              this.setState({password, error: ''});
             }}
-            error={this.props.passwordError}
           />
           <TouchableOpacity style={styles.forgotPasswordContainer}>
             <TextComp style={{color: 'grey'}}>Forgot your password?</TextComp>
           </TouchableOpacity>
         </View>
         {/* Error */}
+
         <View style={styles.errorContainer}>
-          <TextComp bold style={{color: Colors.error}}>
-            {this.props.error}
-          </TextComp>
+          {loading ? (
+            <ActivityIndicator size="small" color="grey" />
+          ) : (
+            <TextComp bold style={{color: Colors.error}}>
+              {error}
+            </TextComp>
+          )}
         </View>
         {/* Sign in Button */}
         <View style={styles.btnContainer}>
@@ -67,9 +100,9 @@ class HomeScreen extends React.Component {
             Sign in
           </TextComp>
           <TouchableOpacity
-            onPress={() => {
-              this.props.authenticate(email, password);
-            }}>
+            onPress={() =>
+              this.loginHandler(this.state.email, this.state.password)
+            }>
             <Ionicons
               name="arrow-forward-circle"
               color={Colors.primaryColor}

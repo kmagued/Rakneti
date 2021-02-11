@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "707577468734",
+    "project_id": "rakneti",
+    "storage_bucket": "rakneti.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707577468734:android:be9f8d816c47f526bafe6f",
+        "android_client_info": {
+          "package_name": "com.rakneti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "707577468734-kanv7nn6a15a0s1of6f6cuqbu4t0001r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHNInKiudhwroXIdSHBrLJjhlWlYKd_ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "707577468734-kanv7nn6a15a0s1of6f6cuqbu4t0001r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "707577468734-jd0519saoa1or419dk07j2dtu778fen6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rakneti"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

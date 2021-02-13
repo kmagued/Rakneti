@@ -87,7 +87,7 @@ class HomeScreen extends React.Component {
 
         <View style={styles.errorContainer}>
           {loading ? (
-            <ActivityIndicator size="small" color="grey" />
+            <ActivityIndicator size="small" color={Colors.primaryColor} />
           ) : (
             <TextComp bold style={{color: Colors.error}}>
               {error}
@@ -132,6 +132,7 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: 'white',
   },
   decorationTop: {
     backgroundColor: Colors.primaryColor,

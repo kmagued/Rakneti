@@ -46,6 +46,7 @@ export const HomeNavigator = () => {
   return (
     <HomeStackNavigator.Navigator headerMode="none">
       <HomeStackNavigator.Screen name="Home" component={HomeScreen} />
+
       <HomeStackNavigator.Screen
         name="ParkingDetail"
         component={ParkingAreaDetailScreen}

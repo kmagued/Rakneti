@@ -12,6 +12,7 @@
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 
+#import <GoogleMaps/GoogleMaps.h>
 #import <Firebase.h>
 
 static void InitializeFlipper(UIApplication *application) {
@@ -29,6 +30,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyBbMEgv98fwlT8CL5V5HmaxzVYgpG6g4gI"]; //ADD THIS
   
   if ([FIRApp defaultApp] == nil) {
       [FIRApp configure];

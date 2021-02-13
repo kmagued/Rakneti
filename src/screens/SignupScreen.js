@@ -97,6 +97,7 @@ class SignupScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: 'white',
   },
   header: {
     flex: 0.15,

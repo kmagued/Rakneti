@@ -1,6 +1,7 @@
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const ERROR = 'ERROR';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
+export const RESERVE_PLACE = 'RESERVE_PLACE';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,5 +23,13 @@ export const authenticate = (token) => async (dispatch) => {
   dispatch({
     type: AUTHENTICATE,
     token,
+  });
+};
+
+export const reserve = (place, area) => async (dispatch) => {
+  dispatch({
+    type: RESERVE_PLACE,
+    place,
+    area,
   });
 };

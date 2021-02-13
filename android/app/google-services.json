@@ -1,15 +1,16 @@
 {
   "project_info": {
     "project_number": "707577468734",
+    "firebase_url": "https://rakneti-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "rakneti",
     "storage_bucket": "rakneti.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:707577468734:android:be9f8d816c47f526bafe6f",
+        "mobilesdk_app_id": "1:707577468734:android:361db9956bed9d7abafe6f",
         "android_client_info": {
-          "package_name": "com.rakneti"
+          "package_name": "com.rakna"
         }
       },
       "oauth_client": [

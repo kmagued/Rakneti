@@ -1,10 +1,18 @@
-import {ERROR, SET_DID_TRY_AL, AUTHENTICATE} from '../actions/users';
+import {
+  ERROR,
+  SET_DID_TRY_AL,
+  AUTHENTICATE,
+  RESERVE_PLACE,
+} from '../actions/users';
 
 const initialState = {
   user: null,
   token: null,
   error: null,
   didTryAL: false,
+  didReserve: false,
+  reservedPlace: null,
+  reservedArea: null,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -22,6 +30,14 @@ const usersReducer = (state = initialState, action) => {
     case ERROR: {
       return {
         error: action.error,
+      };
+    }
+    case RESERVE_PLACE: {
+      return {
+        ...state,
+        didReserve: true,
+        reservedPlace: action.place,
+        reservedArea: action.area,
       };
     }
     default:

@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
-import MapPreview from '../components/MapPreview';
 import {Overlay} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {connect} from 'react-redux';
+import {reserve} from '../store/actions/users';
 
 class ParkingAreaDetailScreen extends React.Component {
   state = {
@@ -22,7 +23,7 @@ class ParkingAreaDetailScreen extends React.Component {
   };
 
   render() {
-    const {parking} = this.props.route.params;
+    const parking = this.props.route.params.parking;
 
     return (
       <Fragment>
@@ -38,15 +39,21 @@ class ParkingAreaDetailScreen extends React.Component {
               <TextComp bold style={styles.title}>
                 {this.state.activeArea.name}
               </TextComp>
-              <TextComp style={{fontSize: 32, marginBottom: 20}}>
+              <TextComp
+                bold
+                style={{fontSize: 32, marginBottom: 20, color: '#333333'}}>
                 {this.state.activeArea.numberOfSpots -
                   this.state.activeArea.availableSpots}
-                /
-                <TextComp bold style={{color: Colors.secondary}}>
-                  {this.state.activeArea.numberOfSpots}
+                <TextComp style={{color: Colors.secondary, fontSize: 25}}>
+                  /{this.state.activeArea.numberOfSpots}
                 </TextComp>
               </TextComp>
-              <TouchableOpacity style={styles.btn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => {
+                  this.setState({visible: false});
+                  this.props.reserve(parking, this.state.activeArea);
+                }}>
                 <TextComp bold style={{color: 'white', fontSize: 16}}>
                   Reserve Spot
                 </TextComp>
@@ -75,13 +82,10 @@ class ParkingAreaDetailScreen extends React.Component {
           <ScrollView>
             <View style={styles.body}>
               <TextComp style={styles.address}>{parking.address}</TextComp>
-              <View style={styles.map}>
-                <MapPreview selectedLocation={parking.coordinates} markers />
-              </View>
               <TextComp style={{fontSize: 20, margin: 10}}>
                 Pick Parking Area
               </TextComp>
-              {parking.parkingAreas.map((area, index) => (
+              {Object.values(parking.parkingAreas).map((area, index) => (
                 <TouchableOpacity
                   style={styles.areaContainer}
                   key={index}
@@ -104,15 +108,18 @@ class ParkingAreaDetailScreen extends React.Component {
                   </TextComp>
                   <View>
                     <TextComp
-                      bold={area.availableSpots === 0}
+                      bold
                       style={{
+                        fontSize: 22,
                         color:
                           area.availableSpots === 0
                             ? Colors.primaryColor
                             : 'grey',
                       }}>
-                      {area.numberOfSpots - area.availableSpots}/
-                      {area.numberOfSpots}
+                      {area.numberOfSpots - area.availableSpots}
+                      <TextComp style={{fontSize: 14}}>
+                        /{area.numberOfSpots}
+                      </TextComp>
                     </TextComp>
                   </View>
                 </TouchableOpacity>
@@ -200,4 +207,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ParkingAreaDetailScreen;
+const mapDispatchToProps = {
+  reserve,
+};
+
+export default connect(null, mapDispatchToProps)(ParkingAreaDetailScreen);

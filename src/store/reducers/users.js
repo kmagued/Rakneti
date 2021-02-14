@@ -25,6 +25,7 @@ const usersReducer = (state = initialState, action) => {
       return {
         token: action.token,
         didTryAL: true,
+        user: action.user,
       };
     }
     case ERROR: {

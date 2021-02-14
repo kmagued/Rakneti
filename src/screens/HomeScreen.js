@@ -16,6 +16,7 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {getLocations} from '../store/actions/locations';
 import {connect} from 'react-redux';
+import auth from '@react-native-firebase/auth';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -61,6 +62,7 @@ class HomeScreen extends React.Component {
   );
 
   componentDidMount() {
+    auth().signOut();
     this.props.get();
   }
 
@@ -68,6 +70,7 @@ class HomeScreen extends React.Component {
     return (
       <SafeAreaView style={styles.screen}>
         <Header
+          style={{backgroundColor: 'white'}}
           centerComponent={
             <TextComp bold style={{color: Colors.primaryColor, fontSize: 25}}>
               RAKNETI

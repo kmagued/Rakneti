@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import Colors from '../constants/Colors';
 
 const Header = (props) => {
   return (
-    <View style={{...props.style, ...styles.container}}>
+    <View style={{...styles.container, ...props.style}}>
       <View style={{marginLeft: 10}}>{props.leftComponent}</View>
       <View
         style={{
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     zIndex: 1,
+    backgroundColor: Colors.primaryColor,
   },
 });
 

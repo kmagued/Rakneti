@@ -24,6 +24,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
+import {useSelector} from 'react-redux';
 
 const AuthStackNavigator = createStackNavigator();
 
@@ -58,6 +59,8 @@ export const HomeNavigator = () => {
 const DrawerNavigator = createDrawerNavigator();
 
 export const Drawer = (props) => {
+  const {email, fullName} = useSelector((state) => state.users.user);
+
   return (
     <DrawerNavigator.Navigator
       drawerContent={(props) => {
@@ -75,9 +78,9 @@ export const Drawer = (props) => {
                   <View style={{alignItems: 'center', flexDirection: 'row'}}>
                     <Ionicons name="ios-person-circle" size={80} color="#ccc" />
                     <View>
-                      <TextComp style={{fontSize: 16}}>Khaled Magued</TextComp>
+                      <TextComp style={{fontSize: 16}}>{fullName}</TextComp>
                       <TextComp style={{color: 'grey', fontSize: 12}}>
-                        kmagued@gmail.com
+                        {email}
                       </TextComp>
                     </View>
                   </View>

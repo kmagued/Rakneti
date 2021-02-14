@@ -18,7 +18,13 @@ const Input = (props) => {
         {props.icon}
         <TextInput
           {...props}
-          keyboardType={props.email ? 'email-address' : 'default'}
+          keyboardType={
+            props.email
+              ? 'email-address'
+              : props.mobile
+              ? 'number-pad'
+              : 'default'
+          }
           value={props.value}
           style={styles.input}
           onFocus={() => {

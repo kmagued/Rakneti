@@ -7,6 +7,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Colors from '../constants/Colors';
 import Input from '../components/Input';
 import LicensePlateInput from '../components/LicensePlateInput';
+import {connect} from 'react-redux';
+import {signup} from '../store/actions/users';
 
 class CarDetailsScreen extends React.Component {
   state = {
@@ -14,9 +16,23 @@ class CarDetailsScreen extends React.Component {
     model: null,
     color: null,
     plateNumber: '',
+    error: '',
+  };
+
+  signupHandler = (uid, email, fullName, mobile) => {
+    const carDetails = {
+      make: this.state.make,
+      model: this.state.model,
+      color: this.state.color,
+      licensePlate: this.state.plateNumber,
+    };
+
+    this.props.signup(uid, email, fullName, mobile, carDetails);
   };
 
   render() {
+    const {uid, email, fullName, mobile} = this.props.route.params;
+
     return (
       <SafeAreaView style={styles.screen}>
         {/* Header */}
@@ -72,6 +88,11 @@ class CarDetailsScreen extends React.Component {
                 }}
               />
               <LicensePlateInput plateNumber={this.state.plateNumber} />
+              <View style={{alignItems: 'center', marginTop: 40}}>
+                <TextComp bold style={{color: Colors.error, fontSize: 16}}>
+                  {this.state.error}
+                </TextComp>
+              </View>
             </View>
           </View>
         </View>
@@ -82,9 +103,7 @@ class CarDetailsScreen extends React.Component {
               Sign Up
             </TextComp>
             <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('CarDetails');
-              }}>
+              onPress={() => this.signupHandler(uid, email, fullName, mobile)}>
               <Ionicons
                 name="arrow-forward-circle"
                 color={Colors.primaryColor}
@@ -127,4 +146,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarDetailsScreen;
+const mapDispatchToProps = {
+  signup,
+};
+
+export default connect(null, mapDispatchToProps)(CarDetailsScreen);

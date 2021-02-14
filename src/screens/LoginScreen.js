@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 import Input from '../components/Input';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import {authenticate} from '../store/actions/users';
+import {login} from '../store/actions/users';
 import {ActivityIndicator} from 'react-native';
 
 class HomeScreen extends React.Component {
@@ -22,7 +22,7 @@ class HomeScreen extends React.Component {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then((res) => {
-        this.props.authenticate(res.user.uid);
+        this.props.login(res.user.uid, res.user.email);
       })
       .catch((error) => {
         if (error.code === 'auth/user-not-found') {
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  authenticate,
+  login,
 };
 
 const mapStateToProps = (state) => ({

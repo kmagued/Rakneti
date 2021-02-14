@@ -10,6 +10,7 @@ import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import AppNavigator from './navigation/AppNavigator';
 import firebase from 'firebase';
+import env from '../env';
 
 // const enhancers = [
 //   applyMiddleware(thunk),
@@ -25,7 +26,7 @@ const store = createStore(
 );
 
 var firebaseConfig = {
-  apiKey: 'AIzaSyDXP33HEqPjjaNG3qD8rGuqGNRXRiP4Kps',
+  apiKey: env.firebaseApiKey,
   authDomain: 'rakneti.firebaseapp.com',
   databaseURL: 'https://rakneti-default-rtdb.europe-west1.firebasedatabase.app',
   projectId: 'rakneti',

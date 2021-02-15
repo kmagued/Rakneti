@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import TextComp from '../components/TextComp';
 import Header from '../components/Header';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import MapPreview from '../components/MapPreview';
 import {connect} from 'react-redux';
@@ -17,7 +16,13 @@ import {removeFromBookmarkedLocations} from '../store/actions/locations';
 class BookmarkedLocationsScreen extends React.Component {
   renderPlace = (itemData) => {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.container}
+        onPress={() => {
+          this.props.navigation.navigate('ParkingDetail', {
+            parkingName: itemData.item.name,
+          });
+        }}>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.map}>
             <MapPreview selectedLocation={itemData.item.coordinates} markers />
@@ -43,45 +48,25 @@ class BookmarkedLocationsScreen extends React.Component {
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   render() {
     return (
-      <Fragment>
-        <SafeAreaView style={{flex: 0, backgroundColor: Colors.primaryColor}} />
-        <View style={styles.screen}>
-          <Header
-            centerComponent={
-              <TextComp bold style={{color: 'white', fontSize: 25}}>
-                RAKNETI
-              </TextComp>
-            }
-            leftComponent={
-              <Ionicons
-                name="ios-menu"
-                size={30}
-                color="white"
-                onPress={() => {
-                  this.props.navigation.toggleDrawer();
-                }}
-              />
-            }
-          />
-          <View style={styles.screenTitleContainer}>
-            <TextComp style={{color: 'white', fontSize: 20}}>
-              Bookmarked Locations
-            </TextComp>
-          </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={Object.values(this.props.user.bookmarkedLocations)}
-            keyExtractor={(item) => item.name}
-            renderItem={this.renderPlace}
-          />
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.screenTitleContainer}>
+          <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
+            Bookmarked Locations
+          </TextComp>
         </View>
-      </Fragment>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={Object.values(this.props.user.bookmarkedLocations)}
+          keyExtractor={(item) => item.name}
+          renderItem={this.renderPlace}
+        />
+      </SafeAreaView>
     );
   }
 }
@@ -89,9 +74,9 @@ class BookmarkedLocationsScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: 'white',
   },
   screenTitleContainer: {
-    backgroundColor: Colors.secondary,
     padding: 15,
     alignItems: 'center',
   },
@@ -103,6 +88,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 15,
     padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
   map: {
     borderWidth: 0.5,

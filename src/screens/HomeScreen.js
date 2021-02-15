@@ -11,12 +11,8 @@ import {
 import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {getLocations} from '../store/actions/locations';
 import {connect} from 'react-redux';
-import auth from '@react-native-firebase/auth';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -36,7 +32,7 @@ class HomeScreen extends React.Component {
     <TouchableOpacity
       onPress={() => {
         this.props.navigation.navigate('ParkingDetail', {
-          parking: itemData.item,
+          parkingName: itemData.item.name,
         });
       }}
       style={styles.placeContainer}
@@ -62,7 +58,6 @@ class HomeScreen extends React.Component {
   );
 
   componentDidMount() {
-    auth().signOut();
     this.props.get();
   }
 
@@ -75,15 +70,6 @@ class HomeScreen extends React.Component {
             <TextComp bold style={{color: Colors.primaryColor, fontSize: 25}}>
               RAKNETI
             </TextComp>
-          }
-          leftComponent={
-            <Ionicons
-              name="ios-menu"
-              size={30}
-              onPress={() => {
-                this.props.navigation.toggleDrawer();
-              }}
-            />
           }
         />
         <View style={{marginHorizontal: 10, flex: 1}}>

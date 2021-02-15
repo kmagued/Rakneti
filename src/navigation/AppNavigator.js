@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 
-import {AuthNavigator, Drawer} from '../navigation/MainNavigator';
+import {AuthNavigator, Drawer, TabNavigator} from '../navigation/MainNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 import ReservationDetails from '../screens/ReservationDetails';
 
@@ -13,7 +13,7 @@ const AppNavigator = (props) => {
 
   return (
     <NavigationContainer>
-      {isAuth && !didReserve && <Drawer />}
+      {isAuth && !didReserve && <TabNavigator />}
       {isAuth && didReserve && <ReservationDetails />}
       {!isAuth && didTryAutoLogin && <AuthNavigator />}
       {!isAuth && !didTryAutoLogin && <LoadingScreen />}

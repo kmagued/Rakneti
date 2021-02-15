@@ -38,7 +38,12 @@ class ParkingAreaDetailScreen extends React.Component {
   };
 
   render() {
-    const parking = this.props.route.params.parking;
+    const parkingName = this.props.route.params.parkingName;
+
+    const parking = this.props.locations.find(
+      (location) => location.name === parkingName,
+    );
+
     const {bookmarkedLocations} = this.props.user;
 
     if (bookmarkedLocations) {
@@ -225,6 +230,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   user: state.users.user,
+  locations: state.locations.locations,
 });
 
 const mapDispatchToProps = {

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import TextComp from '../components/TextComp';
 import Header from '../components/Header';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import MapPreview from '../components/MapPreview';
 
@@ -64,39 +63,19 @@ class ParkingHistoryScreen extends React.Component {
     ];
 
     return (
-      <Fragment>
-        <SafeAreaView style={{flex: 0, backgroundColor: Colors.primaryColor}} />
-        <View style={styles.screen}>
-          <Header
-            centerComponent={
-              <TextComp bold style={{color: 'white', fontSize: 25}}>
-                RAKNETI
-              </TextComp>
-            }
-            leftComponent={
-              <Ionicons
-                name="ios-menu"
-                size={30}
-                color="white"
-                onPress={() => {
-                  this.props.navigation.toggleDrawer();
-                }}
-              />
-            }
-          />
-          <View style={styles.screenTitleContainer}>
-            <TextComp style={{color: 'white', fontSize: 20}}>
-              Parking History
-            </TextComp>
-          </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={PLACES}
-            keyExtractor={(item) => item.name}
-            renderItem={this.renderPlace}
-          />
+      <SafeAreaView style={styles.screen}>
+        <View style={styles.screenTitleContainer}>
+          <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
+            Parking History
+          </TextComp>
         </View>
-      </Fragment>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={PLACES}
+          keyExtractor={(item) => item.name}
+          renderItem={this.renderPlace}
+        />
+      </SafeAreaView>
     );
   }
 }
@@ -104,9 +83,9 @@ class ParkingHistoryScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: 'white',
   },
   screenTitleContainer: {
-    backgroundColor: Colors.secondary,
     padding: 15,
     alignItems: 'center',
   },
@@ -118,6 +97,14 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 15,
     padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
   map: {
     borderWidth: 0.5,

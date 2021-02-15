@@ -3,6 +3,8 @@ import {
   SET_DID_TRY_AL,
   AUTHENTICATE,
   RESERVE_PLACE,
+  LOGOUT,
+  LOCAL_SIGNIN,
 } from '../actions/users';
 import {
   SET_BOOKMARKED_LOCATIONS,
@@ -30,6 +32,12 @@ const usersReducer = (state = initialState, action) => {
         token: action.token,
         didTryAL: true,
         user: {...action.user, uid: action.token},
+      };
+    }
+    case LOCAL_SIGNIN: {
+      return {
+        token: action.user.uid,
+        user: action.user,
       };
     }
     case ERROR: {
@@ -73,6 +81,11 @@ const usersReducer = (state = initialState, action) => {
         },
       };
     }
+    case LOGOUT:
+      return {
+        user: null,
+        token: null,
+      };
     default:
       return state;
   }

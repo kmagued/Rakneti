@@ -2,6 +2,8 @@ export const AUTHENTICATE = 'AUTHENTICATE';
 export const ERROR = 'ERROR';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 export const RESERVE_PLACE = 'RESERVE_PLACE';
+export const LOGOUT = 'LOGOUT';
+export const LOCAL_SIGNIN = 'LOCAL_SIGNIN';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase';
@@ -12,12 +14,13 @@ export const tryLocalSignin = () => async (dispatch) => {
     dispatch({
       type: SET_DID_TRY_AL,
     });
+  } else {
+    const user = JSON.parse(data);
+    dispatch({
+      type: LOCAL_SIGNIN,
+      user,
+    });
   }
-  const token = data;
-  dispatch({
-    type: AUTHENTICATE,
-    token,
-  });
 };
 
 export const login = (uid) => async (dispatch) => {
@@ -26,15 +29,18 @@ export const login = (uid) => async (dispatch) => {
     .ref('/users')
     .child(uid)
     .once('value')
-    .then((snapshot) => {
+    .then(async (snapshot) => {
       dispatch({
         type: AUTHENTICATE,
         user: snapshot.val(),
         token: uid,
       });
-    });
 
-  // await AsyncStorage.setItem('user', token);
+      await AsyncStorage.setItem(
+        'user',
+        JSON.stringify({...snapshot.val(), uid}),
+      );
+    });
 };
 
 export const reserve = (place, area) => async (dispatch) => {
@@ -48,6 +54,7 @@ export const reserve = (place, area) => async (dispatch) => {
 export const signup = (uid, email, fullName, mobile, carDetails) => async (
   dispatch,
 ) => {
+  let userInfo = {email, fullName, mobile, carDetails};
   firebase
     .database()
     .ref('users/' + uid)
@@ -57,11 +64,19 @@ export const signup = (uid, email, fullName, mobile, carDetails) => async (
       mobile,
       carDetails,
     })
-    .then(() => {
+    .then(async () => {
       dispatch({
         type: AUTHENTICATE,
-        user: {email, fullName, mobile, carDetails},
+        user: userInfo,
         token: uid,
       });
+      await AsyncStorage.setItem('user', JSON.stringify({...userInfo, uid}));
     });
+};
+
+export const logout = () => async (dispatch) => {
+  AsyncStorage.removeItem('user');
+  dispatch({
+    type: LOGOUT,
+  });
 };

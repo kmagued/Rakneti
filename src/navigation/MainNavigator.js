@@ -8,13 +8,15 @@ import {
 } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator, DrawerItemList} from '@react-navigation/drawer';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import CarDetailsScreen from '../screens/CarDetailsScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ParkingHistoryScreen from '../screens/ParkingHistoryScreen';
 import BookmarkedLocationsScreen from '../screens/BookmarkedLocationsScreen';
-import ReportScreen from '../screens/ReportScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import ContactUsScreen from '../screens/ContactUsScreen';
 import ParkingAreaDetailScreen from '../screens/ParkingAreaDetailScreen';
 
@@ -47,7 +49,6 @@ export const HomeNavigator = () => {
   return (
     <HomeStackNavigator.Navigator headerMode="none">
       <HomeStackNavigator.Screen name="Home" component={HomeScreen} />
-
       <HomeStackNavigator.Screen
         name="ParkingDetail"
         component={ParkingAreaDetailScreen}
@@ -55,6 +56,22 @@ export const HomeNavigator = () => {
     </HomeStackNavigator.Navigator>
   );
 };
+
+const BookmarkedStackNavigator = createStackNavigator();
+
+export const BookmarkedNavigator = () => (
+  <BookmarkedStackNavigator.Navigator headerMode="none">
+    <BookmarkedStackNavigator.Screen
+      name="BookmarkedLocations"
+      component={BookmarkedLocationsScreen}
+    />
+
+    <BookmarkedStackNavigator.Screen
+      name="ParkingDetail"
+      component={ParkingAreaDetailScreen}
+    />
+  </BookmarkedStackNavigator.Navigator>
+);
 
 const DrawerNavigator = createDrawerNavigator();
 
@@ -166,6 +183,51 @@ export const Drawer = (props) => {
     </DrawerNavigator.Navigator>
   );
 };
+
+const Tab = createBottomTabNavigator();
+
+export const TabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={({route}) => ({
+      tabBarIcon: ({focused, color, size}) => {
+        let iconName;
+
+        if (route.name === 'Home') {
+          iconName = 'ios-home';
+        } else if (route.name === 'ParkingHistory') {
+          return (
+            <MaterialCommunityIcons
+              name="history"
+              size={size}
+              color={focused ? Colors.primaryColor : 'grey'}
+            />
+          );
+        } else if (route.name === 'BookmarkedLocations') {
+          iconName = 'ios-bookmark';
+        } else {
+          iconName = 'ios-person';
+        }
+
+        return (
+          <Ionicons
+            name={iconName}
+            size={size}
+            color={focused ? Colors.primaryColor : 'grey'}
+          />
+        );
+      },
+    })}
+    tabBarOptions={{
+      activeTintColor: Colors.primaryColor,
+      inactiveTintColor: 'grey',
+      showLabel: false,
+    }}>
+    <Tab.Screen name="Home" component={HomeNavigator} />
+    <Tab.Screen name="BookmarkedLocations" component={BookmarkedNavigator} />
+    <Tab.Screen name="ParkingHistory" component={ParkingHistoryScreen} />
+    <Tab.Screen name="Profile" component={ProfileScreen} />
+  </Tab.Navigator>
+);
 
 const styles = StyleSheet.create({
   drawer: {

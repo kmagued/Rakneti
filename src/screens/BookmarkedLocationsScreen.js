@@ -11,11 +11,13 @@ import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import MapPreview from '../components/MapPreview';
+import {connect} from 'react-redux';
+import {removeFromBookmarkedLocations} from '../store/actions/locations';
 
 class BookmarkedLocationsScreen extends React.Component {
   renderPlace = (itemData) => {
     return (
-      <TouchableOpacity style={styles.container} activeOpacity={0.5}>
+      <View style={styles.container}>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.map}>
             <MapPreview selectedLocation={itemData.item.coordinates} markers />
@@ -30,7 +32,10 @@ class BookmarkedLocationsScreen extends React.Component {
             </TextComp>
 
             <View style={{marginTop: 25, alignSelf: 'flex-end'}}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.remove(this.props.user.uid, itemData.item);
+                }}>
                 <TextComp style={{color: Colors.primaryColor, fontSize: 12}}>
                   Remove from Bookmarks
                 </TextComp>
@@ -38,20 +43,11 @@ class BookmarkedLocationsScreen extends React.Component {
             </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
   render() {
-    const PLACES = [
-      {
-        name: 'Point 90',
-        isFull: false,
-        coordinates: {lat: '30.020562315816996', lng: '31.495029894659176'},
-        dateAdded: 'Jan 12, 2021',
-      },
-    ];
-
     return (
       <Fragment>
         <SafeAreaView style={{flex: 0, backgroundColor: Colors.primaryColor}} />
@@ -80,7 +76,7 @@ class BookmarkedLocationsScreen extends React.Component {
           </View>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={PLACES}
+            data={Object.values(this.props.user.bookmarkedLocations)}
             keyExtractor={(item) => item.name}
             renderItem={this.renderPlace}
           />
@@ -117,4 +113,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookmarkedLocationsScreen;
+const mapStateToProps = (state) => ({
+  user: state.users.user,
+});
+
+const mapDispatchToProps = {
+  remove: removeFromBookmarkedLocations,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BookmarkedLocationsScreen);

@@ -90,7 +90,9 @@ class HomeScreen extends React.Component {
           <FlatList
             data={this.props.locations}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) =>
+              `${item.coordinates.lat},${item.coordinates.lng}`
+            }
             renderItem={this.renderPlace}
           />
         </View>

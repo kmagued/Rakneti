@@ -13,17 +13,39 @@ import {Overlay} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {reserve} from '../store/actions/users';
+import {
+  addToBookmarkedLocations,
+  removeFromBookmarkedLocations,
+} from '../store/actions/locations';
 
 class ParkingAreaDetailScreen extends React.Component {
   state = {
     visible: false,
     activeArea: {},
-    isBookmarked: false,
     logVisible: false,
+  };
+
+  bookmarkHandler = (parking) => {
+    if (!this.bookmarked) {
+      this.props.add(this.props.user.uid, parking);
+      this.setState({logVisible: true});
+      setTimeout(() => {
+        this.setState({logVisible: false});
+      }, 2000);
+    } else {
+      this.props.remove(this.props.user.uid, parking);
+    }
   };
 
   render() {
     const parking = this.props.route.params.parking;
+    const {bookmarkedLocations} = this.props.user;
+
+    if (bookmarkedLocations) {
+      this.bookmarked = Object.values(bookmarkedLocations).find(
+        (location) => location.name === parking.name,
+      );
+    }
 
     return (
       <Fragment>
@@ -67,16 +89,10 @@ class ParkingAreaDetailScreen extends React.Component {
               </TextComp>
             </View>
             <Ionicons
-              name={this.state.isBookmarked ? 'bookmark' : 'bookmark-outline'}
+              name={this.bookmarked ? 'bookmark' : 'bookmark-outline'}
               size={25}
               color="white"
-              onPress={() => {
-                this.setState({logVisible: !this.state.isBookmarked});
-                setTimeout(() => {
-                  this.setState({logVisible: false});
-                }, 2000);
-                this.setState({isBookmarked: !this.state.isBookmarked});
-              }}
+              onPress={() => this.bookmarkHandler(parking)}
             />
           </View>
           <ScrollView>
@@ -207,8 +223,17 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = (state) => ({
+  user: state.users.user,
+});
+
 const mapDispatchToProps = {
   reserve,
+  add: addToBookmarkedLocations,
+  remove: removeFromBookmarkedLocations,
 };
 
-export default connect(null, mapDispatchToProps)(ParkingAreaDetailScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ParkingAreaDetailScreen);

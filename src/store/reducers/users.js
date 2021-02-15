@@ -4,6 +4,10 @@ import {
   AUTHENTICATE,
   RESERVE_PLACE,
 } from '../actions/users';
+import {
+  SET_BOOKMARKED_LOCATIONS,
+  REMOVE_FROM_BOOKMARKED,
+} from '../actions/locations';
 
 const initialState = {
   user: null,
@@ -25,7 +29,7 @@ const usersReducer = (state = initialState, action) => {
       return {
         token: action.token,
         didTryAL: true,
-        user: action.user,
+        user: {...action.user, uid: action.token},
       };
     }
     case ERROR: {
@@ -39,6 +43,34 @@ const usersReducer = (state = initialState, action) => {
         didReserve: true,
         reservedPlace: action.place,
         reservedArea: action.area,
+      };
+    }
+    case SET_BOOKMARKED_LOCATIONS: {
+      let updatedBookmarkedLocations = Object.values(
+        state.user.bookmarkedLocations,
+      );
+
+      updatedBookmarkedLocations.push(action.location);
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          bookmarkedLocations: Object.assign({}, updatedBookmarkedLocations),
+        },
+      };
+    }
+    case REMOVE_FROM_BOOKMARKED: {
+      const bookmarked = Object.values(state.user.bookmarkedLocations).filter(
+        (location) => location.name !== action.locationName,
+      );
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          bookmarkedLocations: Object.assign({}, bookmarked),
+        },
       };
     }
     default:

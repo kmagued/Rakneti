@@ -1,4 +1,4 @@
-import {SET_LOCATIONS} from '../actions/locations';
+import {SET_LOCATIONS, ADD_TO_BOOKMARKED} from '../actions/locations';
 
 const initialState = {
   locations: [],
@@ -10,6 +10,12 @@ const locationsReducer = (state = initialState, action) => {
       return {
         locations: Object.values(action.locations),
       };
+    case ADD_TO_BOOKMARKED:
+      return {
+        ...state,
+        bookmarkedLocations: [action.location, ...state.bookmarkedLocations],
+      };
+
     default:
       return state;
   }

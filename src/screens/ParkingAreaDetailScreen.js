@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import TextComp from '../components/TextComp';
+import MapPreview from '../components/MapPreview';
 import Colors from '../constants/Colors';
 import {Overlay} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -75,16 +76,40 @@ class ParkingAreaDetailScreen extends React.Component {
                   /{this.state.activeArea.numberOfSpots}
                 </TextComp>
               </TextComp>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => {
-                  this.setState({visible: false});
-                  this.props.reserve(parking, this.state.activeArea);
-                }}>
-                <TextComp bold style={{color: 'white', fontSize: 16}}>
-                  Reserve Spot
+
+              {this.props.didReserve ? (
+                <TextComp
+                  bold
+                  style={{
+                    color: Colors.primaryColor,
+                    fontSize: 20,
+                    width: '70%',
+                    textAlign: 'center',
+                  }}>
+                  You already reserved a spot
                 </TextComp>
-              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={() => {
+                    this.setState({visible: false});
+                    this.props
+                      .reserve(parking, this.state.activeArea)
+                      .then(() => {
+                        this.props.navigation.reset({
+                          index: 0,
+                          routes: [{name: 'HomeNav'}],
+                        });
+                        this.props.navigation.navigate('HomeNav', {
+                          screen: 'Reservation',
+                        });
+                      });
+                  }}>
+                  <TextComp bold style={{color: 'white', fontSize: 16}}>
+                    Reserve Spot
+                  </TextComp>
+                </TouchableOpacity>
+              )}
             </View>
           </Overlay>
           <View style={styles.screenTitleContainer}>
@@ -103,6 +128,9 @@ class ParkingAreaDetailScreen extends React.Component {
           <ScrollView>
             <View style={styles.body}>
               <TextComp style={styles.address}>{parking.address}</TextComp>
+              <View style={styles.map}>
+                <MapPreview markers selectedLocation={parking.coordinates} />
+              </View>
               <TextComp style={{fontSize: 20, margin: 10}}>
                 Pick Parking Area
               </TextComp>
@@ -231,6 +259,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   user: state.users.user,
   locations: state.locations.locations,
+  didReserve: state.users.didReserve,
 });
 
 const mapDispatchToProps = {

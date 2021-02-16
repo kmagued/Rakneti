@@ -19,6 +19,7 @@ const initialState = {
   didReserve: false,
   reservedPlace: null,
   reservedArea: null,
+  reservationDate: null,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -51,6 +52,7 @@ const usersReducer = (state = initialState, action) => {
         didReserve: true,
         reservedPlace: action.place,
         reservedArea: action.area,
+        reservationDate: action.date,
       };
     }
     case SET_BOOKMARKED_LOCATIONS: {

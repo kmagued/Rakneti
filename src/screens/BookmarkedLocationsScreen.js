@@ -5,13 +5,14 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import TextComp from '../components/TextComp';
-import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import MapPreview from '../components/MapPreview';
 import {connect} from 'react-redux';
 import {removeFromBookmarkedLocations} from '../store/actions/locations';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class BookmarkedLocationsScreen extends React.Component {
   renderPlace = (itemData) => {
@@ -22,32 +23,39 @@ class BookmarkedLocationsScreen extends React.Component {
           this.props.navigation.navigate('ParkingDetail', {
             parkingName: itemData.item.name,
           });
-        }}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={styles.map}>
-            <MapPreview selectedLocation={itemData.item.coordinates} markers />
-          </View>
-          <View style={{marginHorizontal: 15, marginVertical: 5, width: '58%'}}>
-            <TextComp style={{fontSize: 22, marginBottom: 20}}>
-              {itemData.item.name}
-            </TextComp>
-            <TextComp style={{color: 'grey', marginBottom: 5}}>
-              Added on{'\n'}
-              {itemData.item.dateAdded}
-            </TextComp>
-
-            <View style={{marginTop: 25, alignSelf: 'flex-end'}}>
+        }}
+        activeOpacity={0.7}>
+        <ImageBackground
+          source={{uri: itemData.item.image}}
+          style={{width: '100%', height: '100%', justifyContent: 'flex-end'}}>
+          <View style={styles.titleContainer}>
+            <View style={{width: '80%'}}>
+              <TextComp black style={{fontSize: 22, color: 'white'}}>
+                {itemData.item.name.toUpperCase()}
+              </TextComp>
+              <TextComp bold style={{color: 'white', fontSize: 14}}>
+                ADDED ON {itemData.item.dateAdded.toUpperCase()}
+              </TextComp>
+            </View>
+            <View>
               <TouchableOpacity
                 onPress={() => {
                   this.props.remove(this.props.user.uid, itemData.item);
-                }}>
-                <TextComp style={{color: Colors.primaryColor, fontSize: 12}}>
-                  Remove from Bookmarks
-                </TextComp>
+                }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: 'white',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                activeOpacity={0.7}>
+                <Ionicons name="ios-bookmark-outline" size={18} />
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ImageBackground>
       </TouchableOpacity>
     );
   };
@@ -55,9 +63,9 @@ class BookmarkedLocationsScreen extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.screen}>
-        <View style={styles.screenTitleContainer}>
-          <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
-            Bookmarked Locations
+        <View style={styles.headerContainer}>
+          <TextComp black style={{color: Colors.secondary, fontSize: 18}}>
+            BOOKMARKED LOCATIONS
           </TextComp>
         </View>
         <FlatList
@@ -76,26 +84,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  screenTitleContainer: {
+  headerContainer: {
     padding: 15,
     alignItems: 'center',
   },
+  titleContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   container: {
     backgroundColor: 'white',
-    height: 150,
+    height: 200,
     width: '90%',
     marginVertical: 8,
     alignSelf: 'center',
     borderRadius: 15,
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
+    overflow: 'hidden',
   },
   map: {
     borderWidth: 0.5,

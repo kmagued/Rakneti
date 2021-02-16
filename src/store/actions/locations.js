@@ -7,7 +7,7 @@ export const SET_BOOKMARKED_LOCATIONS = 'SET_BOOKMARKED_LOCATIONS';
 export const REMOVE_FROM_BOOKMARKED = 'REMOVE_FROM_BOOKMARKED';
 
 export const getLocations = () => async (dispatch) => {
-  firebase
+  return firebase
     .database()
     .ref('/locations')
     .once('value')
@@ -23,6 +23,7 @@ export const addToBookmarkedLocations = (uid, location) => async (dispatch) => {
     address: location.address,
     dateAdded: moment().format('MMM DD, YYYY'),
     coordinates: location.coordinates,
+    image: location.image,
   };
 
   firebase

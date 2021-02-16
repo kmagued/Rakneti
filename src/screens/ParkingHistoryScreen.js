@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import TextComp from '../components/TextComp';
-import Header from '../components/Header';
 import Colors from '../constants/Colors';
 import MapPreview from '../components/MapPreview';
 
@@ -64,9 +63,9 @@ class ParkingHistoryScreen extends React.Component {
 
     return (
       <SafeAreaView style={styles.screen}>
-        <View style={styles.screenTitleContainer}>
-          <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
-            Parking History
+        <View style={styles.headerContainer}>
+          <TextComp black style={{color: Colors.secondary, fontSize: 18}}>
+            PARKING HISTORY
           </TextComp>
         </View>
         <FlatList
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  screenTitleContainer: {
+  headerContainer: {
     padding: 15,
     alignItems: 'center',
   },

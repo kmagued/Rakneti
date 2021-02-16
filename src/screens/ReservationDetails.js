@@ -13,13 +13,29 @@ import TextComp from '../components/TextComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import DetailsHeader from '../components/DetailsHeader';
+import moment from 'moment';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 class ReservationDetails extends React.Component {
+  expectedTimeToArrive = moment(this.props.date).add(10, 'm');
+  now = this.expectedTimeToArrive.diff(moment(Date.now()));
+
+  state = {
+    time: moment(this.now).format('mm:ss'),
+  };
+
+  componentDidMount() {
+    setInterval(() => {
+      const now = this.expectedTimeToArrive.diff(moment(Date.now()));
+      this.setState({time: moment(now).format('mm:ss')});
+    }, 1000);
+  }
+
   render() {
     const reservedParking = this.props.reservedPlace;
     const reservedArea = this.props.reservedArea;
+    const date = this.props.date;
 
     return (
       <Fragment>
@@ -28,7 +44,9 @@ class ReservationDetails extends React.Component {
           contentContainerStyle={{flex: SCREEN_HEIGHT < 800 ? null : 1}}
           style={styles.screen}>
           <View style={{flex: SCREEN_HEIGHT < 800 ? null : 0.95}}>
-            <DetailsHeader />
+            <DetailsHeader
+              onBack={() => this.props.navigation.navigate('Home')}
+            />
             <View style={{marginHorizontal: 30}}>
               {/* DETAILS */}
               <View style={styles.details}>
@@ -39,14 +57,18 @@ class ReservationDetails extends React.Component {
                   />
                 </View>
                 <View>
-                  <TextComp bold style={{fontSize: 20}}>
-                    {reservedParking.name}
-                  </TextComp>
+                  <View style={{width: '80%'}}>
+                    <TextComp bold style={{fontSize: 20}}>
+                      {reservedParking.name}
+                    </TextComp>
+                  </View>
                   <TextComp style={{marginBottom: 10}}>
                     {reservedArea.name}
                   </TextComp>
-                  <TextComp style={{marginBottom: 2}}>Feb 12, 2021</TextComp>
-                  <TextComp>3:20 PM</TextComp>
+                  <TextComp style={{marginBottom: 2}}>
+                    {moment(date).format('MMM DD, YYYY')}
+                  </TextComp>
+                  <TextComp>{moment(date).format('hh:mm A')}</TextComp>
                 </View>
               </View>
               {/* ADDRESS */}
@@ -66,14 +88,13 @@ class ReservationDetails extends React.Component {
                 </TouchableOpacity>
               </View>
             </View>
-
             <View
               style={{alignItems: 'center', marginTop: 20, marginBottom: 40}}>
               <TextComp bold style={{color: 'grey', fontSize: 15}}>
                 TIME REMAINING TO ARRIVE
               </TextComp>
               <TextComp style={{fontSize: 40, marginBottom: 15}}>
-                10:00
+                {this.state.time}
               </TextComp>
             </View>
           </View>
@@ -137,6 +158,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   reservedPlace: state.users.reservedPlace,
   reservedArea: state.users.reservedArea,
+  date: state.users.reservationDate,
 });
 
 export default connect(mapStateToProps)(ReservationDetails);

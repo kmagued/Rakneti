@@ -19,6 +19,8 @@ import BookmarkedLocationsScreen from '../screens/BookmarkedLocationsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ContactUsScreen from '../screens/ContactUsScreen';
 import ParkingAreaDetailScreen from '../screens/ParkingAreaDetailScreen';
+import ReservationDetails from '../screens/ReservationDetails';
+import ParkingAreas from '../screens/ParkingAreas';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -53,6 +55,11 @@ export const HomeNavigator = () => {
         name="ParkingDetail"
         component={ParkingAreaDetailScreen}
       />
+      <HomeStackNavigator.Screen
+        name="Reservation"
+        component={ReservationDetails}
+      />
+      <HomeStackNavigator.Screen name="ParkingAreas" component={ParkingAreas} />
     </HomeStackNavigator.Navigator>
   );
 };
@@ -192,39 +199,32 @@ export const TabNavigator = () => (
       tabBarIcon: ({focused, color, size}) => {
         let iconName;
 
-        if (route.name === 'Home') {
+        if (route.name === 'HomeNav') {
           iconName = 'ios-home';
-        } else if (route.name === 'ParkingHistory') {
+        } else if (route.name === 'History') {
           return (
-            <MaterialCommunityIcons
-              name="history"
-              size={size}
-              color={focused ? Colors.primaryColor : 'grey'}
-            />
+            <MaterialCommunityIcons name="history" size={size} color={color} />
           );
-        } else if (route.name === 'BookmarkedLocations') {
+        } else if (route.name === 'Bookmarks') {
           iconName = 'ios-bookmark';
         } else {
           iconName = 'ios-person';
         }
 
-        return (
-          <Ionicons
-            name={iconName}
-            size={size}
-            color={focused ? Colors.primaryColor : 'grey'}
-          />
-        );
+        return <Ionicons name={iconName} size={size} color={color} />;
       },
     })}
     tabBarOptions={{
       activeTintColor: Colors.primaryColor,
       inactiveTintColor: 'grey',
       showLabel: false,
+      labelStyle: {
+        fontFamily: 'Ubuntu-Regular',
+      },
     }}>
-    <Tab.Screen name="Home" component={HomeNavigator} />
-    <Tab.Screen name="BookmarkedLocations" component={BookmarkedNavigator} />
-    <Tab.Screen name="ParkingHistory" component={ParkingHistoryScreen} />
+    <Tab.Screen name="HomeNav" component={HomeNavigator} />
+    <Tab.Screen name="Bookmarks" component={BookmarkedNavigator} />
+    <Tab.Screen name="History" component={ParkingHistoryScreen} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
   </Tab.Navigator>
 );

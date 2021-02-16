@@ -1,10 +1,11 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import TextComp from './TextComp';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Colors from '../constants/Colors';
 import Header from './Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const DetailsHeader = (props) => {
   return (
@@ -17,7 +18,18 @@ const DetailsHeader = (props) => {
           </TextComp>
         }
         leftComponent={
-          <Ionicons name="ios-arrow-back" size={30} color="white" />
+          <TouchableOpacity onPress={props.onBack}>
+            <Ionicons name="ios-arrow-back" size={30} color="white" />
+          </TouchableOpacity>
+        }
+        rightComponent={
+          <TouchableOpacity onPress={props.onOpenQR}>
+            <MaterialCommunityIcons
+              name="qrcode-scan"
+              size={25}
+              color="white"
+            />
+          </TouchableOpacity>
         }
       />
       <View

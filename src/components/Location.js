@@ -1,0 +1,84 @@
+import React from 'react';
+import {
+  TouchableOpacity,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import TextComp from './TextComp';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../constants/Colors';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const Location = (props) => (
+  <TouchableOpacity
+    onPress={props.onPress}
+    style={styles.placeContainer}
+    activeOpacity={0.9}>
+    <View style={styles.imageContainer}>
+      <Image
+        style={styles.image}
+        source={{
+          uri: props.place.image,
+        }}
+      />
+    </View>
+    <View
+      style={{
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: 55,
+      }}>
+      <View>
+        <TextComp bold style={{fontSize: 22, marginBottom: 2}}>
+          {props.place.name}
+        </TextComp>
+        <TextComp style={styles.addressText}>{props.place.address}</TextComp>
+      </View>
+      {props.favorites && (
+        <TouchableOpacity onPress={props.onRemove}>
+          <MaterialIcons
+            name="delete-outline"
+            size={25}
+            color={Colors.secondary}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+  </TouchableOpacity>
+);
+
+const styles = StyleSheet.create({
+  placeContainer: {
+    width: SCREEN_WIDTH / 1.1,
+    alignSelf: 'center',
+    backgroundColor: 'rgb(248, 249, 253)',
+    borderRadius: 20,
+    marginHorizontal: 8,
+    marginVertical: 5,
+    paddingBottom: 15,
+  },
+  imageContainer: {
+    height: 170,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  addressText: {
+    color: 'grey',
+    fontSize: 13,
+  },
+});
+
+export default Location;

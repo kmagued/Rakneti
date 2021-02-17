@@ -5,6 +5,7 @@ export const SET_LOCATIONS = 'SET_LOCATIONS';
 export const ADD_TO_BOOKMARKED = 'ADD_TO_BOOKMARKED';
 export const SET_BOOKMARKED_LOCATIONS = 'SET_BOOKMARKED_LOCATIONS';
 export const REMOVE_FROM_BOOKMARKED = 'REMOVE_FROM_BOOKMARKED';
+export const ADD_LOCATION = 'ADD_LOCATION';
 
 export const getLocations = () => async (dispatch) => {
   return firebase
@@ -49,6 +50,29 @@ export const removeFromBookmarkedLocations = (uid, location) => async (
       dispatch({
         type: REMOVE_FROM_BOOKMARKED,
         locationName: location.name,
+      });
+    });
+};
+
+export const addLocation = (name, address, image, coords, areas) => async (
+  dispatch,
+) => {
+  const newLocation = {
+    name,
+    address,
+    image,
+    coordinates: coords,
+    parkingAreas: areas,
+  };
+
+  return firebase
+    .database()
+    .ref('/locations')
+    .push(newLocation)
+    .then(() => {
+      dispatch({
+        type: ADD_LOCATION,
+        location: newLocation,
       });
     });
 };

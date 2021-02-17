@@ -26,10 +26,15 @@ class ReservationDetails extends React.Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     setInterval(() => {
       const now = this.expectedTimeToArrive.diff(moment(Date.now()));
-      this.setState({time: moment(now).format('mm:ss')});
+      this._isMounted && this.setState({time: moment(now).format('mm:ss')});
     }, 1000);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   render() {

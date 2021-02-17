@@ -1,22 +1,14 @@
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, ScrollView} from 'react-native';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import {getLocations} from '../store/actions/locations';
 import {connect} from 'react-redux';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import SwipeList from 'react-native-swiper-flatlist';
 import FeaturedLocation from '../components/FeaturedLocation';
-import {ActivityIndicator} from 'react-native';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
+import ReservationContainer from '../components/ReservationContainer';
+import Location from '../components/Location';
+import {StatusBar} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {
@@ -26,36 +18,14 @@ class HomeScreen extends React.Component {
   renderPlace = (itemData) =>
     //Render 3 parking areas only
     itemData.index < 3 && (
-      <TouchableOpacity
+      <Location
+        place={itemData.item}
         onPress={() => {
           this.props.navigation.navigate('ParkingDetail', {
             parkingName: itemData.item.name,
           });
         }}
-        style={styles.placeContainer}
-        activeOpacity={0.9}
-        disabled={itemData.item.isFull}>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: itemData.item.image,
-            }}
-          />
-        </View>
-        <View style={{paddingHorizontal: 15, paddingBottom: 10}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TextComp
-              bold
-              style={{fontSize: 25, marginRight: 10, marginBottom: 2}}>
-              {itemData.item.name}
-            </TextComp>
-          </View>
-          <TextComp style={styles.addressText}>
-            {itemData.item.address}
-          </TextComp>
-        </View>
-      </TouchableOpacity>
+      />
     );
 
   componentDidMount() {
@@ -72,37 +42,16 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.screen}>
-        <FeaturedLocation location={this.state.featuredLocation} />
-        {this.props.didReserve && (
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => this.props.navigation.navigate('Reservation')}
-            style={{
-              backgroundColor: Colors.primaryColor,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 20,
-            }}>
-            <TextComp
-              bold
-              style={{color: 'white', paddingVertical: 20, fontSize: 16}}>
-              Reservation Details
-            </TextComp>
-            <View>
-              <Ionicons name="ios-arrow-forward" size={25} color="white" />
-            </View>
-          </TouchableOpacity>
-        )}
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '95%',
-            }}>
+      <>
+        <StatusBar barStyle="light-content" />
+        <ScrollView style={styles.screen}>
+          <FeaturedLocation location={this.state.featuredLocation} />
+          {this.props.didReserve && (
+            <ReservationContainer
+              onPress={() => this.props.navigation.navigate('Reservation')}
+            />
+          )}
+          <View style={styles.container}>
             <TextComp bold style={{fontSize: 22, padding: 20}}>
               Most popular
             </TextComp>
@@ -120,7 +69,12 @@ class HomeScreen extends React.Component {
               autoplayDelay={4}
               autoplayLoopKeepAnimation
               horizontal
-              data={this.shuffle(this.props.locations)}
+              data={this.shuffle(
+                this.props.locations.filter(
+                  (location) =>
+                    location.name !== this.state.featuredLocation.name,
+                ),
+              )}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item) =>
                 `${item.coordinates.lat},${item.coordinates.lng}`
@@ -128,8 +82,8 @@ class HomeScreen extends React.Component {
               renderItem={this.renderPlace}
             />
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -139,30 +93,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  placeContainer: {
-    width: SCREEN_WIDTH / 1.1,
-    backgroundColor: 'rgb(248, 249, 253)',
-    borderRadius: 20,
-    marginHorizontal: 8,
-  },
-
-  imageContainer: {
-    height: 170,
-    width: '100%',
-    justifyContent: 'center',
+  container: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  addressText: {
-    color: 'grey',
-    height: 35,
-    fontSize: 13,
+    justifyContent: 'space-between',
+    width: '95%',
   },
 });
 

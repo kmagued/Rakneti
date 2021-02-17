@@ -21,6 +21,7 @@ import ContactUsScreen from '../screens/ContactUsScreen';
 import ParkingAreaDetailScreen from '../screens/ParkingAreaDetailScreen';
 import ReservationDetails from '../screens/ReservationDetails';
 import ParkingAreas from '../screens/ParkingAreas';
+import AddLocation from '../screens/AddLocation';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -193,41 +194,53 @@ export const Drawer = (props) => {
 
 const Tab = createBottomTabNavigator();
 
-export const TabNavigator = () => (
-  <Tab.Navigator
-    screenOptions={({route}) => ({
-      tabBarIcon: ({focused, color, size}) => {
-        let iconName;
+export const TabNavigator = () => {
+  const user = useSelector((state) => state.users.user);
+  return (
+    <Tab.Navigator
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
 
-        if (route.name === 'HomeNav') {
-          iconName = 'ios-home';
-        } else if (route.name === 'History') {
-          return (
-            <MaterialCommunityIcons name="history" size={size} color={color} />
-          );
-        } else if (route.name === 'Bookmarks') {
-          iconName = 'ios-bookmark';
-        } else {
-          iconName = 'ios-person';
-        }
+          if (route.name === 'HomeNav') {
+            iconName = 'ios-home';
+          } else if (route.name === 'History') {
+            return (
+              <MaterialCommunityIcons
+                name="history"
+                size={size}
+                color={color}
+              />
+            );
+          } else if (route.name === 'Bookmarks') {
+            iconName = 'ios-heart';
+          } else if (route.name === 'Add') {
+            return (
+              <MaterialIcons name="add-business" size={30} color={color} />
+            );
+          } else {
+            iconName = 'ios-person';
+          }
 
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-    })}
-    tabBarOptions={{
-      activeTintColor: Colors.primaryColor,
-      inactiveTintColor: 'grey',
-      showLabel: false,
-      labelStyle: {
-        fontFamily: 'Ubuntu-Regular',
-      },
-    }}>
-    <Tab.Screen name="HomeNav" component={HomeNavigator} />
-    <Tab.Screen name="Bookmarks" component={BookmarkedNavigator} />
-    <Tab.Screen name="History" component={ParkingHistoryScreen} />
-    <Tab.Screen name="Profile" component={ProfileScreen} />
-  </Tab.Navigator>
-);
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: Colors.primaryColor,
+        inactiveTintColor: 'grey',
+        showLabel: false,
+        labelStyle: {
+          fontFamily: 'Ubuntu-Regular',
+        },
+      }}>
+      <Tab.Screen name="HomeNav" component={HomeNavigator} />
+      <Tab.Screen name="Bookmarks" component={BookmarkedNavigator} />
+      {user.admin && <Tab.Screen name="Add" component={AddLocation} />}
+      <Tab.Screen name="History" component={ParkingHistoryScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
+  );
+};
 
 const styles = StyleSheet.create({
   drawer: {

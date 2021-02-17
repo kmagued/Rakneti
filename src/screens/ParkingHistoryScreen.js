@@ -28,7 +28,7 @@ class ParkingHistoryScreen extends React.Component {
 
             <View style={{marginTop: 25, alignSelf: 'flex-end'}}>
               <TouchableOpacity>
-                <TextComp style={{color: Colors.primaryColor, fontSize: 12}}>
+                <TextComp style={{color: Colors.secondary, fontSize: 12}}>
                   Remove from History
                 </TextComp>
               </TouchableOpacity>
@@ -48,12 +48,6 @@ class ParkingHistoryScreen extends React.Component {
         dateAdded: 'Jan 12, 2021',
       },
       {
-        name: 'City Stars',
-        isFull: false,
-        coordinates: {lat: '30.07310549694943', lng: '31.345797468669588'},
-        dateAdded: 'Aug 13, 2020',
-      },
-      {
         name: 'Cairo Festival City',
         isFull: true,
         coordinates: {lat: '30.029884204216813', lng: '31.408410047290527'},
@@ -62,19 +56,20 @@ class ParkingHistoryScreen extends React.Component {
     ];
 
     return (
-      <SafeAreaView style={styles.screen}>
-        <View style={styles.headerContainer}>
-          <TextComp black style={{color: Colors.secondary, fontSize: 18}}>
-            PARKING HISTORY
-          </TextComp>
-        </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={PLACES}
-          keyExtractor={(item) => item.name}
-          renderItem={this.renderPlace}
-        />
-      </SafeAreaView>
+      <>
+        <SafeAreaView style={{backgroundColor: Colors.secondary}} />
+        <SafeAreaView style={styles.screen}>
+          <View style={styles.headerContainer}>
+            <TextComp style={{color: 'white', fontSize: 20}}>History</TextComp>
+          </View>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={PLACES}
+            keyExtractor={(item) => item.name}
+            renderItem={this.renderPlace}
+          />
+        </SafeAreaView>
+      </>
     );
   }
 }
@@ -87,23 +82,17 @@ const styles = StyleSheet.create({
   headerContainer: {
     padding: 15,
     alignItems: 'center',
+    backgroundColor: Colors.secondary,
+    marginBottom: 10,
   },
   container: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(248, 249, 253)',
     height: 150,
     width: '90%',
     marginVertical: 8,
     alignSelf: 'center',
     borderRadius: 15,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
   },
   map: {
     borderWidth: 0.5,

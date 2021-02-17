@@ -32,7 +32,13 @@ const usersReducer = (state = initialState, action) => {
       return {
         token: action.token,
         didTryAL: true,
-        user: {...action.user, uid: action.token},
+        user: {
+          ...action.user,
+          uid: action.token,
+          bookmarkedLocations: action.user.bookmarkedLocations
+            ? action.user.bookmarkedLocations
+            : {},
+        },
       };
     }
     case LOCAL_SIGNIN: {

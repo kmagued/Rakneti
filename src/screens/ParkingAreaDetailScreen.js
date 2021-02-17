@@ -26,12 +26,20 @@ class ParkingAreaDetailScreen extends React.Component {
     logVisible: false,
   };
 
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   bookmarkHandler = (parking) => {
     if (!this.bookmarked) {
       this.props.add(this.props.user.uid, parking);
       this.setState({logVisible: true});
       setTimeout(() => {
-        this.setState({logVisible: false});
+        this._isMounted && this.setState({logVisible: false});
       }, 2000);
     } else {
       this.props.remove(this.props.user.uid, parking);
@@ -119,7 +127,7 @@ class ParkingAreaDetailScreen extends React.Component {
               </TextComp>
             </View>
             <Ionicons
-              name={this.bookmarked ? 'bookmark' : 'bookmark-outline'}
+              name={this.bookmarked ? 'ios-heart' : 'ios-heart-outline'}
               size={25}
               color="white"
               onPress={() => this.bookmarkHandler(parking)}

@@ -6,11 +6,15 @@ import {
   FlatList,
   TouchableOpacity,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
 import TextComp from '../components/TextComp';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Colors from '../constants/Colors';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class ParkingAreas extends React.Component {
   renderLocation = (itemData) => {
@@ -24,14 +28,17 @@ class ParkingAreas extends React.Component {
           });
         }}>
         <ImageBackground
-          style={{width: '100%', height: '100%'}}
+          style={{width: '100%', height: '100%', justifyContent: 'flex-end'}}
           source={{uri: itemData.item.image}}>
-          <View style={{backgroundColor: 'rgba(0,0,0,0.5)', height: '100%'}}>
-            <View style={styles.textContainer}>
-              <TextComp black style={styles.text}>
-                {itemData.item.name.toUpperCase()}
-              </TextComp>
-            </View>
+          <View
+            style={{
+              height: '30%',
+              backgroundColor: 'rgb(248, 249, 253)',
+              justifyContent: 'center',
+            }}>
+            <TextComp bold style={styles.text}>
+              {itemData.item.name}
+            </TextComp>
           </View>
         </ImageBackground>
       </TouchableOpacity>
@@ -40,27 +47,31 @@ class ParkingAreas extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.screen}>
-        <Header
-          centerComponent={
-            <TextComp bold style={styles.title}>
-              ALL PARKING AREAS
-            </TextComp>
-          }
-          leftComponent={
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-              <Ionicons name="ios-arrow-back" size={30} />
-            </TouchableOpacity>
-          }
-        />
-        <FlatList
-          data={this.props.locations}
-          renderItem={this.renderLocation}
-          keyExtractor={(item) =>
-            `${item.coordinates.lat},${item.coordinates.lng}`
-          }
-        />
-      </SafeAreaView>
+      <>
+        <SafeAreaView style={{backgroundColor: Colors.secondary}} />
+        <SafeAreaView style={styles.screen}>
+          <Header
+            style={{backgroundColor: Colors.secondary}}
+            centerComponent={
+              <TextComp style={styles.title}>Parking Areas</TextComp>
+            }
+            leftComponent={
+              <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                <Ionicons name="ios-arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            }
+          />
+          <FlatList
+            style={{marginTop: 10}}
+            numColumns={2}
+            data={this.props.locations}
+            renderItem={this.renderLocation}
+            keyExtractor={(item) =>
+              `${item.coordinates.lat},${item.coordinates.lng}`
+            }
+          />
+        </SafeAreaView>
+      </>
     );
   }
 }
@@ -69,23 +80,30 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'white',
+    paddingHorizontal: 15,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     padding: 5,
+    color: 'white',
   },
   locationContainer: {
-    marginVertical: 2,
-    height: 130,
+    margin: 5,
+    height: 200,
+    width: SCREEN_WIDTH / 2.3,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
   textContainer: {
-    height: '90%',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 10,
+    alignItems: 'flex-start',
+    height: '55%',
+    justifyContent: 'center',
+    padding: 10,
   },
   text: {
-    color: 'white',
-    fontSize: 18,
+    fontSize: 16,
+    padding: 10,
   },
 });
 

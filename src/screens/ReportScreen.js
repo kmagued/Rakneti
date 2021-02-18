@@ -5,11 +5,11 @@ import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 
-class ContactUsScreen extends React.Component {
+class ReportScreen extends React.Component {
   render() {
     return (
       <View style={styles.screen}>
-        <TextComp>Contact Us</TextComp>
+        <TextComp>Report</TextComp>
       </View>
     );
   }
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ContactUsScreen;
+export default ReportScreen;

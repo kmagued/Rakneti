@@ -13,10 +13,12 @@ import Colors from '../constants/Colors';
 import {Overlay} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
-import {reserve} from '../store/actions/users';
 import {
   addToBookmarkedLocations,
+  getLocations,
   removeFromBookmarkedLocations,
+  reserveLocation,
+  updateLocations,
 } from '../store/actions/locations';
 
 class ParkingAreaDetailScreen extends React.Component {
@@ -24,10 +26,18 @@ class ParkingAreaDetailScreen extends React.Component {
     visible: false,
     activeArea: {},
     logVisible: false,
+    update: false,
+    index: null,
   };
 
   componentDidMount() {
     this._isMounted = true;
+    this.props.get();
+    setInterval(() => {
+      this.props.update(this.props.route.params.parkingName).then(() => {
+        this._isMounted && this.setState({update: true});
+      });
+    }, 500);
   }
 
   componentWillUnmount() {
@@ -69,7 +79,7 @@ class ParkingAreaDetailScreen extends React.Component {
             isVisible={this.state.visible}
             overlayStyle={styles.overlay}
             onBackdropPress={() => {
-              this.setState({visible: false, activeArea: {}});
+              this.setState({visible: false, activeArea: {}, index: null});
             }}>
             <View style={{alignItems: 'center'}}>
               <TextComp bold style={styles.title}>
@@ -102,7 +112,7 @@ class ParkingAreaDetailScreen extends React.Component {
                   onPress={() => {
                     this.setState({visible: false});
                     this.props
-                      .reserve(parking, this.state.activeArea)
+                      .reserve(parking, this.state.activeArea, this.state.index)
                       .then(() => {
                         this.props.navigation.reset({
                           index: 0,
@@ -149,7 +159,7 @@ class ParkingAreaDetailScreen extends React.Component {
                   activeOpacity={0.5}
                   disabled={area.availableSpots === 0}
                   onPress={() => {
-                    this.setState({visible: true, activeArea: area});
+                    this.setState({visible: true, activeArea: area, index});
                   }}>
                   <TextComp style={{color: 'grey', fontSize: 16}}>
                     {area.name}
@@ -169,9 +179,9 @@ class ParkingAreaDetailScreen extends React.Component {
                       style={{
                         fontSize: 22,
                         color:
-                          area.availableSpots === 0
+                          area.availableSpots == 0
                             ? Colors.primaryColor
-                            : 'grey',
+                            : Colors.secondary,
                       }}>
                       {area.numberOfSpots - area.availableSpots}
                       <TextComp style={{fontSize: 14}}>
@@ -271,9 +281,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  reserve,
+  reserve: reserveLocation,
   add: addToBookmarkedLocations,
   remove: removeFromBookmarkedLocations,
+  update: updateLocations,
+  get: getLocations,
 };
 
 export default connect(

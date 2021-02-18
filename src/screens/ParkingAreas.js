@@ -80,12 +80,10 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'white',
-    paddingHorizontal: 15,
     alignItems: 'center',
   },
   title: {
     fontSize: 20,
-    padding: 5,
     color: 'white',
   },
   locationContainer: {

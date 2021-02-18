@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import DetailsHeader from '../components/DetailsHeader';
 import moment from 'moment';
+import {cancelReservation} from '../store/actions/locations';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -46,6 +47,7 @@ class ReservationDetails extends React.Component {
       <Fragment>
         <SafeAreaView style={{backgroundColor: Colors.primaryColor}} />
         <ScrollView
+          scrollEnabled={SCREEN_HEIGHT < 800}
           contentContainerStyle={{flex: SCREEN_HEIGHT < 800 ? null : 1}}
           style={styles.screen}>
           <View style={{flex: SCREEN_HEIGHT < 800 ? null : 0.95}}>
@@ -105,7 +107,20 @@ class ReservationDetails extends React.Component {
           </View>
           <View style={{alignSelf: 'center', width: '80%', marginBottom: 20}}>
             <TouchableOpacity
-              style={{...styles.btn, backgroundColor: '#333333'}}>
+              style={{...styles.btn, backgroundColor: '#333333'}}
+              onPress={() => {
+                this.props
+                  .cancel(
+                    reservedParking,
+                    reservedArea,
+                    reservedParking.parkingAreas.findIndex(
+                      (item) => item.name === reservedArea.name,
+                    ),
+                  )
+                  .then(() => {
+                    this.props.navigation.navigate('Home');
+                  });
+              }}>
               <TextComp bold style={{color: 'white', fontSize: 14}}>
                 CANCEL RESERVATION
               </TextComp>
@@ -166,4 +181,8 @@ const mapStateToProps = (state) => ({
   date: state.users.reservationDate,
 });
 
-export default connect(mapStateToProps)(ReservationDetails);
+const mapDispatchToProps = {
+  cancel: cancelReservation,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationDetails);

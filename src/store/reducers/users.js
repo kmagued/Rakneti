@@ -2,13 +2,14 @@ import {
   ERROR,
   SET_DID_TRY_AL,
   AUTHENTICATE,
-  RESERVE_PLACE,
   LOGOUT,
   LOCAL_SIGNIN,
 } from '../actions/users';
 import {
   SET_BOOKMARKED_LOCATIONS,
   REMOVE_FROM_BOOKMARKED,
+  RESERVE_PLACE,
+  CANCEL,
 } from '../actions/locations';
 
 const initialState = {
@@ -94,6 +95,12 @@ const usersReducer = (state = initialState, action) => {
         user: null,
         token: null,
       };
+    case CANCEL: {
+      return {
+        ...state,
+        didReserve: false,
+      };
+    }
     default:
       return state;
   }

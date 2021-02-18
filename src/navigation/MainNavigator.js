@@ -22,6 +22,8 @@ import ParkingAreaDetailScreen from '../screens/ParkingAreaDetailScreen';
 import ReservationDetails from '../screens/ReservationDetails';
 import ParkingAreas from '../screens/ParkingAreas';
 import AddLocation from '../screens/AddLocation';
+import EditProfileScreen from '../screens/EditProfileScreen';
+import ReportScreen from '../screens/ReportScreen';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -79,6 +81,23 @@ export const BookmarkedNavigator = () => (
       component={ParkingAreaDetailScreen}
     />
   </BookmarkedStackNavigator.Navigator>
+);
+
+const ProfileStackNavigator = createStackNavigator();
+
+export const ProfileNavigator = () => (
+  <ProfileStackNavigator.Navigator headerMode="none">
+    <ProfileStackNavigator.Screen name="Profile" component={ProfileScreen} />
+    <ProfileStackNavigator.Screen
+      name="ContactUs"
+      component={ContactUsScreen}
+    />
+    <ProfileStackNavigator.Screen
+      name="EditProfile"
+      component={EditProfileScreen}
+    />
+    <ProfileStackNavigator.Screen name="Report" component={ReportScreen} />
+  </ProfileStackNavigator.Navigator>
 );
 
 const DrawerNavigator = createDrawerNavigator();
@@ -237,7 +256,7 @@ export const TabNavigator = () => {
       <Tab.Screen name="Bookmarks" component={BookmarkedNavigator} />
       {user.admin && <Tab.Screen name="Add" component={AddLocation} />}
       <Tab.Screen name="History" component={ParkingHistoryScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
 };

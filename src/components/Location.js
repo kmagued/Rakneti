@@ -33,7 +33,7 @@ const Location = (props) => (
         alignItems: 'center',
         height: 55,
       }}>
-      <View>
+      <View style={{width: '90%'}}>
         <TextComp bold style={{fontSize: 22, marginBottom: 2}}>
           {props.place.name}
         </TextComp>

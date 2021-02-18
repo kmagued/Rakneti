@@ -1,7 +1,6 @@
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const ERROR = 'ERROR';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
-export const RESERVE_PLACE = 'RESERVE_PLACE';
 export const LOGOUT = 'LOGOUT';
 export const LOCAL_SIGNIN = 'LOCAL_SIGNIN';
 
@@ -42,15 +41,6 @@ export const login = (uid) => async (dispatch) => {
         JSON.stringify({...snapshot.val(), uid}),
       );
     });
-};
-
-export const reserve = (place, area) => async (dispatch) => {
-  dispatch({
-    type: RESERVE_PLACE,
-    place,
-    area,
-    date: Date.now(),
-  });
 };
 
 export const signup = (uid, email, fullName, mobile, carDetails) => async (

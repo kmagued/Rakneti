@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.secondary,
     borderBottomRightRadius: Platform.OS === 'ios' ? 20 : 0,
     borderBottomLeftRadius: Platform.OS === 'ios' ? 20 : 0,
-    height: '45%',
+    height: '40%',
     justifyContent: 'center',
   },
   title: {

@@ -32,6 +32,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import {useSelector} from 'react-redux';
+import SearchScreen from '../screens/SearchScreen';
 
 const AuthStackNavigator = createStackNavigator();
 
@@ -58,6 +59,7 @@ export const HomeNavigator = () => {
         name="ParkingDetail"
         component={ParkingAreaDetailScreen}
       />
+      <HomeStackNavigator.Screen name="Search" component={SearchScreen} />
       <HomeStackNavigator.Screen
         name="Reservation"
         component={ReservationDetails}

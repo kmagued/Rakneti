@@ -6,7 +6,6 @@ export const LOCAL_SIGNIN = 'LOCAL_SIGNIN';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase';
-import moment from 'moment';
 
 export const tryLocalSignin = () => async (dispatch) => {
   const data = await AsyncStorage.getItem('user');

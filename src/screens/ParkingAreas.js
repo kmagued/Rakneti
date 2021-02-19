@@ -63,6 +63,7 @@ class ParkingAreas extends React.Component {
           />
           <FlatList
             style={{marginTop: 10}}
+            showsVerticalScrollIndicator={false}
             numColumns={2}
             data={this.props.locations}
             renderItem={this.renderLocation}

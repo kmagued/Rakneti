@@ -45,7 +45,12 @@ class HomeScreen extends React.Component {
       <>
         <StatusBar barStyle="light-content" />
         <ScrollView style={styles.screen}>
-          <FeaturedLocation location={this.state.featuredLocation} />
+          <FeaturedLocation
+            location={this.state.featuredLocation}
+            onSearch={() => {
+              this.props.navigation.navigate('Search');
+            }}
+          />
           {this.props.didReserve && (
             <ReservationContainer
               onPress={() => this.props.navigation.navigate('Reservation')}

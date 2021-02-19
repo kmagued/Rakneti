@@ -1,18 +1,23 @@
 import React from 'react';
 import auth from '@react-native-firebase/auth';
-import {SafeAreaView, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
 import Input from '../components/Input';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {login} from '../store/actions/users';
-import {ActivityIndicator} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {
-    email: 'kmagued@gmail.com',
-    password: 'mypass',
+    email: '',
+    password: '',
     error: null,
     loading: false,
   };

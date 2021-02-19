@@ -24,6 +24,7 @@ const FeaturedLocation = (props) => (
             <TextInput
               placeholder="Parking name, area..."
               style={styles.input}
+              onFocus={props.onSearch}
             />
           </View>
         </View>

@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
   infoContainer: {
     alignItems: 'center',
     backgroundColor: Colors.secondary,
-    borderBottomRightRadius: Platform.OS === 'ios' ? 20 : 0,
-    borderBottomLeftRadius: Platform.OS === 'ios' ? 20 : 0,
+    borderBottomRightRadius: Platform.OS === 'ios' ? 10 : 0,
+    borderBottomLeftRadius: Platform.OS === 'ios' ? 10 : 0,
     height: '40%',
     justifyContent: 'center',
   },
@@ -222,6 +222,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.secondary,
   },
+  text: {
+    color: 'white',
+    fontSize: 18,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -229,10 +233,10 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   circle: {
-    width: 120,
-    height: 120,
+    width: 100,
+    height: 100,
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: 60,
+    borderRadius: 50,
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',

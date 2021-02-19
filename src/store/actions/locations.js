@@ -73,6 +73,17 @@ export const addToBookmarkedLocations = (uid, location) => async (dispatch) => {
 export const removeFromBookmarkedLocations = (uid, location) => async (
   dispatch,
 ) => {
+  let user = await AsyncStorage.getItem('user');
+  if (user) {
+    user = JSON.parse(user);
+    let updatedBookmarks = Object.values(user.bookmarkedLocations).filter(
+      (item) => item.name !== location.name,
+    );
+    user.bookmarkedLocations = updatedBookmarks;
+
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+  }
+
   firebase
     .database()
     .ref(`users/${uid}/bookmarkedLocations/${location.name}`)

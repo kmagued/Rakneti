@@ -7,6 +7,7 @@ import {
   Dimensions,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
@@ -38,10 +39,38 @@ class ReservationDetails extends React.Component {
     this._isMounted = false;
   }
 
+  handleCancelReservation = (reservedParking, reservedArea, uid) => {
+    Alert.alert('', 'Are you sure you want to cancel the reservation?', [
+      {
+        text: 'Yes',
+        style: 'destructive',
+        onPress: () => {
+          this.props
+            .cancel(
+              reservedParking,
+              reservedArea,
+              reservedParking.parkingAreas.findIndex(
+                (item) => item.name === reservedArea.name,
+              ),
+              uid,
+            )
+            .then(() => {
+              this.props.navigation.navigate('Home');
+            });
+        },
+      },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ]);
+  };
+
   render() {
     const reservedParking = this.props.reservedPlace;
     const reservedArea = this.props.reservedArea;
     const date = this.props.date;
+    const user = this.props.user;
 
     return (
       <Fragment>
@@ -108,19 +137,13 @@ class ReservationDetails extends React.Component {
           <View style={{alignSelf: 'center', width: '80%', marginBottom: 20}}>
             <TouchableOpacity
               style={{...styles.btn, backgroundColor: '#333333'}}
-              onPress={() => {
-                this.props
-                  .cancel(
-                    reservedParking,
-                    reservedArea,
-                    reservedParking.parkingAreas.findIndex(
-                      (item) => item.name === reservedArea.name,
-                    ),
-                  )
-                  .then(() => {
-                    this.props.navigation.navigate('Home');
-                  });
-              }}>
+              onPress={() =>
+                this.handleCancelReservation(
+                  reservedParking,
+                  reservedArea,
+                  user.uid,
+                )
+              }>
               <TextComp bold style={{color: 'white', fontSize: 14}}>
                 CANCEL RESERVATION
               </TextComp>
@@ -179,6 +202,7 @@ const mapStateToProps = (state) => ({
   reservedPlace: state.users.reservedPlace,
   reservedArea: state.users.reservedArea,
   date: state.users.reservationDate,
+  user: state.users.user,
 });
 
 const mapDispatchToProps = {

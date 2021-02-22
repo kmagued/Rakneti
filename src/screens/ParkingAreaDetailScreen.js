@@ -112,7 +112,12 @@ class ParkingAreaDetailScreen extends React.Component {
                   onPress={() => {
                     this.setState({visible: false});
                     this.props
-                      .reserve(parking, this.state.activeArea, this.state.index)
+                      .reserve(
+                        parking,
+                        this.state.activeArea,
+                        this.state.index,
+                        this.props.user.uid,
+                      )
                       .then(() => {
                         this.props.navigation.reset({
                           index: 0,
@@ -210,6 +215,7 @@ class ParkingAreaDetailScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 28,
@@ -223,7 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   areaContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(248, 249, 253)',
     padding: 20,
     marginVertical: 7,
     borderRadius: 15,

@@ -119,7 +119,9 @@ export const addLocation = (name, address, image, coords, areas) => async (
     });
 };
 
-export const reserveLocation = (place, area, index) => async (dispatch) => {
+export const reserveLocation = (place, area, index, uid) => async (
+  dispatch,
+) => {
   firebase
     .database()
     .ref('locations')
@@ -137,6 +139,14 @@ export const reserveLocation = (place, area, index) => async (dispatch) => {
             ...area,
             availableSpots:
               Object.values(value)[0].parkingAreas[index].availableSpots - 1,
+          })
+          .then(() => {
+            firebase.database().ref(`reservations/${uid}`).set({
+              place: place.name,
+              area: area.name,
+              time: Date().toString(),
+              arrived: false,
+            });
           });
       }
     });
@@ -149,7 +159,9 @@ export const reserveLocation = (place, area, index) => async (dispatch) => {
   });
 };
 
-export const cancelReservation = (place, area, index) => async (dispatch) => {
+export const cancelReservation = (place, area, index, uid) => async (
+  dispatch,
+) => {
   return firebase
     .database()
     .ref('locations')
@@ -169,9 +181,15 @@ export const cancelReservation = (place, area, index) => async (dispatch) => {
               Object.values(value)[0].parkingAreas[index].availableSpots + 1,
           })
           .then(() => {
-            dispatch({
-              type: CANCEL,
-            });
+            firebase
+              .database()
+              .ref(`reservations/${uid}`)
+              .remove()
+              .then(() => {
+                dispatch({
+                  type: CANCEL,
+                });
+              });
           });
       }
     });

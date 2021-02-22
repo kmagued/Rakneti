@@ -14,11 +14,6 @@ class ReportScreen extends React.Component {
   state = {
     title: '',
     content: '',
-    focus: false,
-    borderWidth: 0.5,
-    borderColor: Colors.secondary,
-    titleBorderWidth: 0.5,
-    titleBorderColor: Colors.secondary,
   };
 
   render() {
@@ -58,7 +53,7 @@ class ReportScreen extends React.Component {
             <View style={styles.input}>
               <TextInput
                 style={styles.inputText}
-                placeholder="Enter issue title"
+                placeholder="Enter location title"
                 value={this.state.title}
                 onChangeText={(title) => this.setState({title})}
               />

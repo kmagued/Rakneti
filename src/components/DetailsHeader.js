@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import TextComp from './TextComp';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Colors from '../constants/Colors';
@@ -14,7 +14,7 @@ const DetailsHeader = (props) => {
         style={{backgroundColor: Colors.primaryColor}}
         centerComponent={
           <TextComp bold style={{fontSize: 18, color: 'white'}}>
-            RESERVATION DETAILS
+            Reservation Details
           </TextComp>
         }
         leftComponent={
@@ -38,6 +38,8 @@ const DetailsHeader = (props) => {
           backgroundColor: Colors.primaryColor,
           marginBottom: 30,
           paddingBottom: 30,
+          borderBottomLeftRadius: Platform.OS === 'ios' ? 10 : 0,
+          borderBottomRightRadius: Platform.OS === 'ios' ? 10 : 0,
         }}>
         <View style={styles.checkContainer}>
           <Entypo name="check" size={40} color="white" />

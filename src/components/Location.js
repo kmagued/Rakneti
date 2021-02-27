@@ -15,7 +15,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const Location = (props) => (
   <TouchableOpacity
     onPress={props.onPress}
-    style={styles.placeContainer}
+    style={{...styles.placeContainer, ...props.style}}
     activeOpacity={0.9}>
     <View style={styles.imageContainer}>
       <Image

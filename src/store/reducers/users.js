@@ -10,6 +10,7 @@ import {
   REMOVE_FROM_BOOKMARKED,
   RESERVE_PLACE,
   CANCEL,
+  SET_NEARBY_LOCATIONS,
 } from '../actions/locations';
 
 const initialState = {
@@ -21,6 +22,7 @@ const initialState = {
   reservedPlace: null,
   reservedArea: null,
   reservationDate: null,
+  location: null,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -101,6 +103,14 @@ const usersReducer = (state = initialState, action) => {
         didReserve: false,
       };
     }
+    case SET_NEARBY_LOCATIONS:
+      return {
+        ...state,
+        location: {
+          lat: action.position.coords.latitude,
+          lng: action.position.coords.longitude,
+        },
+      };
     default:
       return state;
   }

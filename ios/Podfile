@@ -5,14 +5,17 @@ platform :ios, '10.0'
 
 target 'Rakna' do
   rn_maps_path = '../node_modules/react-native-maps'
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   pod 'Firebase/Database'
+  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
-
 
   target 'RaknaTests' do
     inherit! :complete

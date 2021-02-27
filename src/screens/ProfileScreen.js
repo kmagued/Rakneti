@@ -24,7 +24,7 @@ class ProfileScreen extends React.Component {
         <SafeAreaView style={{backgroundColor: Colors.secondary}} />
         <SafeAreaView style={styles.screen}>
           <Header
-            style={{backgroundColor: Colors.secondary, paddingBottom: 10}}
+            style={{backgroundColor: Colors.secondary}}
             centerComponent={
               <TextComp style={{color: 'white', fontSize: 20}}>
                 Profile
@@ -44,155 +44,28 @@ class ProfileScreen extends React.Component {
                     },
                   ]);
                 }}>
-                <MaterialIcons name="logout" size={25} color="white" />
+                <MaterialIcons name="logout" size={23} color="white" />
               </TouchableOpacity>
             }
           />
-          <ScrollView scrollEnabled={Dimensions.get('window').height < 800}>
+          <ScrollView
+            scrollEnabled={Dimensions.get('window').height < 800}
+            contentContainerStyle={{height: '100%'}}>
             <View style={styles.infoContainer}>
               <View style={styles.circle}>
-                <TextComp style={{color: Colors.secondary, fontSize: 60}}>
+                <TextComp style={{color: Colors.secondary, fontSize: 50}}>
                   {this.props.user.fullName.charAt(0)}
                 </TextComp>
               </View>
-              <TextComp style={{fontSize: 28, color: 'white'}}>
+              <TextComp style={{fontSize: 28, color: Colors.secondary}}>
                 {this.props.user.fullName}
               </TextComp>
-              <TextComp style={{color: 'white', fontSize: 16, marginTop: 5}}>
+              <TextComp
+                style={{color: Colors.secondary, fontSize: 16, marginTop: 5}}>
                 {this.props.user.email}
               </TextComp>
             </View>
-            <View style={styles.body}>
-              <TouchableOpacity
-                style={styles.container}
-                activeOpacity={0.8}
-                onPress={() => {
-                  this.props.navigation.navigate('EditProfile');
-                }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 70,
-                      height: 70,
-                      borderRadius: 35,
-                      backgroundColor: 'white',
-                    }}>
-                    <MaterialIcons
-                      name="edit"
-                      size={30}
-                      color={Colors.primaryColor}
-                    />
-                  </View>
-                  <TextComp
-                    bold
-                    style={{
-                      color: Colors.secondary,
-                      fontSize: 18,
-                      marginLeft: 20,
-                    }}>
-                    Edit Profile
-                  </TextComp>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate('EditProfile');
-                  }}>
-                  <Ionicons
-                    name="ios-chevron-forward"
-                    size={30}
-                    color={Colors.primaryColor}
-                  />
-                </TouchableOpacity>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => {
-                  this.props.navigation.navigate('Report');
-                }}
-                style={styles.container}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 70,
-                      height: 70,
-                      borderRadius: 35,
-                      backgroundColor: 'white',
-                    }}>
-                    <MaterialIcons
-                      name="report-problem"
-                      size={30}
-                      color={Colors.primaryColor}
-                    />
-                  </View>
-                  <TextComp
-                    bold
-                    style={{
-                      color: Colors.secondary,
-                      fontSize: 18,
-                      marginLeft: 20,
-                    }}>
-                    Report
-                  </TextComp>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate('Report');
-                  }}>
-                  <Ionicons
-                    name="ios-chevron-forward"
-                    size={30}
-                    color={Colors.primaryColor}
-                  />
-                </TouchableOpacity>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.container}
-                activeOpacity={0.8}
-                onPress={() => {
-                  this.props.navigation.navigate('ContactUs');
-                }}>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 70,
-                      height: 70,
-                      borderRadius: 35,
-                      backgroundColor: 'white',
-                    }}>
-                    <MaterialIcons
-                      name="phone-in-talk"
-                      size={30}
-                      color={Colors.primaryColor}
-                    />
-                  </View>
-                  <TextComp
-                    bold
-                    style={{
-                      color: Colors.secondary,
-                      fontSize: 18,
-                      marginLeft: 20,
-                    }}>
-                    Contact Us
-                  </TextComp>
-                </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate('ContactUs');
-                  }}>
-                  <Ionicons
-                    name="ios-chevron-forward"
-                    size={30}
-                    color={Colors.primaryColor}
-                  />
-                </TouchableOpacity>
-              </TouchableOpacity>
-            </View>
+            <View style={styles.body}></View>
           </ScrollView>
         </SafeAreaView>
       </>
@@ -203,7 +76,7 @@ class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: 'rgb(248, 249, 253)',
+    backgroundColor: 'white',
   },
   screenTitleContainer: {
     padding: 15,
@@ -211,20 +84,15 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     alignItems: 'center',
-    backgroundColor: Colors.secondary,
     borderBottomRightRadius: Platform.OS === 'ios' ? 10 : 0,
     borderBottomLeftRadius: Platform.OS === 'ios' ? 10 : 0,
-    height: '40%',
     justifyContent: 'center',
+    height: '30%',
   },
   title: {
     marginBottom: 5,
     fontSize: 14,
     color: Colors.secondary,
-  },
-  text: {
-    color: 'white',
-    fontSize: 18,
   },
   container: {
     flexDirection: 'row',
@@ -235,17 +103,17 @@ const styles = StyleSheet.create({
   circle: {
     width: 100,
     height: 100,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     borderRadius: 50,
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   body: {
-    width: '80%',
     alignSelf: 'center',
     paddingBottom: 150,
     marginVertical: 20,
+    height: '65%',
   },
 });
 

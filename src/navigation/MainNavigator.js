@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator, DrawerItemList} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import LoginScreen from '../screens/LoginScreen';
@@ -24,13 +16,15 @@ import ParkingAreas from '../screens/ParkingAreas';
 import AddLocation from '../screens/AddLocation';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ReportScreen from '../screens/ReportScreen';
+import MapScreen from '../screens/MapScreen';
 
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Foundation from 'react-native-vector-icons/Foundation';
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Colors from '../constants/Colors';
-import TextComp from '../components/TextComp';
 import {useSelector} from 'react-redux';
 import SearchScreen from '../screens/SearchScreen';
 
@@ -65,6 +59,7 @@ export const HomeNavigator = () => {
         component={ReservationDetails}
       />
       <HomeStackNavigator.Screen name="ParkingAreas" component={ParkingAreas} />
+      <HomeStackNavigator.Screen name="Map" component={MapScreen} />
     </HomeStackNavigator.Navigator>
   );
 };
@@ -99,119 +94,12 @@ export const ProfileNavigator = () => (
       component={EditProfileScreen}
     />
     <ProfileStackNavigator.Screen name="Report" component={ReportScreen} />
+    <ProfileStackNavigator.Screen
+      name="History"
+      component={ParkingHistoryScreen}
+    />
   </ProfileStackNavigator.Navigator>
 );
-
-const DrawerNavigator = createDrawerNavigator();
-
-export const Drawer = (props) => {
-  const {email, fullName} = useSelector((state) => state.users.user);
-
-  return (
-    <DrawerNavigator.Navigator
-      drawerContent={(props) => {
-        return (
-          <View style={styles.drawer}>
-            <SafeAreaView
-              style={{flex: 1}}
-              forceInset={{top: 'always', horizontal: 'never'}}>
-              <View
-                style={{
-                  flex: 0.9,
-                  marginTop: Platform.OS === 'android' ? 0 : 20,
-                }}>
-                <View style={styles.container}>
-                  <View style={{alignItems: 'center', flexDirection: 'row'}}>
-                    <Ionicons name="ios-person-circle" size={80} color="#ccc" />
-                    <View>
-                      <TextComp style={{fontSize: 16}}>{fullName}</TextComp>
-                      <TextComp style={{color: 'grey', fontSize: 12}}>
-                        {email}
-                      </TextComp>
-                    </View>
-                  </View>
-                  <TouchableOpacity style={{alignItems: 'flex-end'}}>
-                    <TextComp
-                      style={{fontSize: 12, color: Colors.primaryColor}}>
-                      Edit profile
-                    </TextComp>
-                  </TouchableOpacity>
-                </View>
-                <DrawerItemList {...props} />
-              </View>
-              <View style={styles.bottomContainer}>
-                <TouchableOpacity onPress={() => {}}>
-                  <MaterialIcons name="settings" size={35} color="white" />
-                </TouchableOpacity>
-              </View>
-            </SafeAreaView>
-          </View>
-        );
-      }}
-      drawerContentOptions={{
-        activeBackgroundColor: null,
-        activeTintColor: Colors.secondary,
-        inactiveTintColor: 'white',
-        labelStyle: {
-          fontFamily: 'Ubuntu-Regular',
-        },
-      }}>
-      <DrawerNavigator.Screen
-        name="Reserve"
-        component={HomeNavigator}
-        options={{
-          drawerIcon: () => (
-            <MaterialCommunityIcons
-              name="home-outline"
-              size={28}
-              color="white"
-            />
-          ),
-        }}
-      />
-      <DrawerNavigator.Screen
-        name="Parking History"
-        component={ParkingHistoryScreen}
-        options={{
-          drawerIcon: () => (
-            <MaterialCommunityIcons name="history" size={25} color="white" />
-          ),
-        }}
-      />
-      <DrawerNavigator.Screen
-        name="Bookmarked Locations"
-        component={BookmarkedLocationsScreen}
-        options={{
-          drawerIcon: () => (
-            <MaterialCommunityIcons
-              name="bookmark-outline"
-              size={25}
-              color="white"
-            />
-          ),
-        }}
-      />
-      <DrawerNavigator.Screen
-        name="Report"
-        component={ReportScreen}
-        options={{
-          drawerIcon: () => (
-            <MaterialIcons name="report-problem" size={25} color="white" />
-          ),
-        }}
-      />
-      <DrawerNavigator.Screen
-        name="Contact Us"
-        component={ContactUsScreen}
-        options={{
-          drawerIcon: () => (
-            <MaterialIcons name="phone-in-talk" size={25} color="white" />
-          ),
-        }}
-      />
-    </DrawerNavigator.Navigator>
-  );
-};
 
 const Tab = createBottomTabNavigator();
 
@@ -221,34 +109,36 @@ export const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-
           if (route.name === 'HomeNav') {
-            iconName = 'ios-home';
-          } else if (route.name === 'History') {
+            return focused ? (
+              <Foundation name="home" size={30} color={color} />
+            ) : (
+              <Feather name="home" size={25} color={color} />
+            );
+          } else if (route.name === 'Bookmarks') {
+            return focused ? (
+              <FontAwesome name="heart" size={24} color={color} />
+            ) : (
+              <Feather name="heart" size={25} color={color} />
+            );
+          } else if (route.name === 'Add') {
             return (
-              <MaterialCommunityIcons
-                name="history"
+              <MaterialIcons name="add-business" size={size} color={color} />
+            );
+          } else {
+            return (
+              <FontAwesome5
+                name={focused ? 'user-alt' : 'user'}
                 size={size}
                 color={color}
               />
             );
-          } else if (route.name === 'Bookmarks') {
-            iconName = 'ios-heart';
-          } else if (route.name === 'Add') {
-            return (
-              <MaterialIcons name="add-business" size={30} color={color} />
-            );
-          } else {
-            iconName = 'ios-person';
           }
-
-          return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
       tabBarOptions={{
         activeTintColor: Colors.primaryColor,
-        inactiveTintColor: 'grey',
+        inactiveTintColor: Colors.secondary,
         showLabel: false,
         labelStyle: {
           fontFamily: 'Ubuntu-Regular',
@@ -257,31 +147,7 @@ export const TabNavigator = () => {
       <Tab.Screen name="HomeNav" component={HomeNavigator} />
       <Tab.Screen name="Bookmarks" component={BookmarkedNavigator} />
       {user.admin && <Tab.Screen name="Add" component={AddLocation} />}
-      <Tab.Screen name="History" component={ParkingHistoryScreen} />
       <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  drawer: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: Colors.primaryColor,
-  },
-  container: {
-    backgroundColor: 'white',
-    width: '90%',
-    alignSelf: 'center',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginBottom: 15,
-  },
-  bottomContainer: {
-    flex: 0.1,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingHorizontal: 10,
-  },
-});

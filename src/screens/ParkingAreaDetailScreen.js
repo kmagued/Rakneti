@@ -106,6 +106,19 @@ class ParkingAreaDetailScreen extends React.Component {
                   }}>
                   You already reserved a spot
                 </TextComp>
+              ) : !this.props.nearby.find(
+                  (loc) => loc.name === parking.name,
+                ) ? (
+                <TextComp
+                  bold
+                  style={{
+                    color: Colors.primaryColor,
+                    fontSize: 20,
+                    width: '70%',
+                    textAlign: 'center',
+                  }}>
+                  Not in range of reservation
+                </TextComp>
               ) : (
                 <TouchableOpacity
                   style={styles.btn}
@@ -159,14 +172,24 @@ class ParkingAreaDetailScreen extends React.Component {
               </TextComp>
               {Object.values(parking.parkingAreas).map((area, index) => (
                 <TouchableOpacity
-                  style={styles.areaContainer}
+                  style={{
+                    ...styles.areaContainer,
+                    backgroundColor:
+                      area.availableSpots == 0
+                        ? '#F0F0F0'
+                        : Colors.primaryColor,
+                  }}
                   key={index}
                   activeOpacity={0.5}
-                  disabled={area.availableSpots === 0}
+                  disabled={area.availableSpots == 0}
                   onPress={() => {
                     this.setState({visible: true, activeArea: area, index});
                   }}>
-                  <TextComp style={{color: 'grey', fontSize: 16}}>
+                  <TextComp
+                    style={{
+                      color: area.availableSpots == 0 ? 'grey' : 'white',
+                      fontSize: 16,
+                    }}>
                     {area.name}
                     <TextComp
                       style={{color: Colors.primaryColor, fontSize: 14}}>
@@ -183,10 +206,7 @@ class ParkingAreaDetailScreen extends React.Component {
                       bold
                       style={{
                         fontSize: 22,
-                        color:
-                          area.availableSpots == 0
-                            ? Colors.primaryColor
-                            : Colors.secondary,
+                        color: area.availableSpots == 0 ? 'grey' : 'white',
                       }}>
                       {area.numberOfSpots - area.availableSpots}
                       <TextComp style={{fontSize: 14}}>
@@ -229,9 +249,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   areaContainer: {
-    backgroundColor: 'rgb(248, 249, 253)',
     padding: 20,
-    marginVertical: 7,
+    marginVertical: 5,
     borderRadius: 15,
     flexDirection: 'row',
     alignItems: 'center',
@@ -255,8 +274,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     borderRadius: 10,
-    borderWidth: 0.5,
-    borderColor: 'grey',
     overflow: 'hidden',
     marginBottom: 10,
   },
@@ -284,6 +301,7 @@ const mapStateToProps = (state) => ({
   user: state.users.user,
   locations: state.locations.locations,
   didReserve: state.users.didReserve,
+  nearby: state.locations.nearbyLocations,
 });
 
 const mapDispatchToProps = {

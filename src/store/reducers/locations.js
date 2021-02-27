@@ -3,11 +3,14 @@ import {
   ADD_TO_BOOKMARKED,
   ADD_LOCATION,
   UPDATE_LOCATIONS,
+  SET_NEARBY_LOCATIONS,
 } from '../actions/locations';
+import {getDistance} from 'geolib';
 
 const initialState = {
   locations: [],
   bookmarkedLocations: [],
+  nearbyLocations: [],
 };
 
 const locationsReducer = (state = initialState, action) => {
@@ -36,6 +39,24 @@ const locationsReducer = (state = initialState, action) => {
         ...state,
         locations: state.locations,
       };
+    case SET_NEARBY_LOCATIONS:
+      let nearby = [];
+
+      state.locations.forEach((loc) => {
+        let distance = getDistance(action.position.coords, {
+          latitude: loc.coordinates.lat,
+          longitude: loc.coordinates.lng,
+        });
+        if (distance < 2000) {
+          nearby.push(loc);
+        }
+      });
+
+      return {
+        ...state,
+        nearbyLocations: nearby,
+      };
+
     default:
       return state;
   }

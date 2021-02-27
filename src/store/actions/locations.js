@@ -9,7 +9,11 @@ export const ADD_LOCATION = 'ADD_LOCATION';
 export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
 export const RESERVE_PLACE = 'RESERVE_PLACE';
 export const CANCEL = 'CANCEL';
+export const SET_NEARBY_LOCATIONS = 'SET_NEARBY_LOCATIONS';
 
+import Geolocation from 'react-native-geolocation-service';
+import {Platform} from 'react-native';
+import {PERMISSIONS, check, request, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const getLocations = () => async (dispatch) => {
@@ -193,4 +197,45 @@ export const cancelReservation = (place, area, index, uid) => async (
           });
       }
     });
+};
+
+export const getUserLocation = () => async (dispatch) => {
+  const res =
+    Platform.OS === 'ios'
+      ? await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+      : await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+  if (res === RESULTS.GRANTED) {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        dispatch({
+          type: SET_NEARBY_LOCATIONS,
+          position,
+        });
+      },
+      (error) => {
+        console.log(error);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  } else if (res === RESULTS.DENIED) {
+    const res2 =
+      Platform.OS === 'ios'
+        ? await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+        : await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    res2 === RESULTS.GRANTED
+      ? Geolocation.getCurrentPosition(
+          (position) => {
+            dispatch({
+              type: SET_NEARBY_LOCATIONS,
+              position,
+            });
+          },
+          (error) => {
+            console.log(error);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        )
+      : null;
+  }
 };

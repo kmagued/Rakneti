@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.2",
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/app": "^10.7.0",
     "@react-native-firebase/auth": "^10.7.0",
@@ -20,6 +21,7 @@
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "firebase": "^8.2.7",
+    "geolib": "^3.3.1",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-native": "0.63.4",
@@ -27,6 +29,7 @@
     "react-native-geolocation-service": "^5.2.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-maps": "^0.27.1",
+    "react-native-permissions": "^3.0.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.16.1",

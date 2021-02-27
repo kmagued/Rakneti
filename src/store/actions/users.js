@@ -3,6 +3,7 @@ export const ERROR = 'ERROR';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 export const LOGOUT = 'LOGOUT';
 export const LOCAL_SIGNIN = 'LOCAL_SIGNIN';
+export const SET_USER_LOCATION = 'SET_USER_LOCATION';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase';

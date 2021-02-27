@@ -1,14 +1,21 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  TouchableHighlight,
+} from 'react-native';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import {getLocations} from '../store/actions/locations';
+import {getUserLocation} from '../store/actions/locations';
 import {connect} from 'react-redux';
 import SwipeList from 'react-native-swiper-flatlist';
 import FeaturedLocation from '../components/FeaturedLocation';
 import ReservationContainer from '../components/ReservationContainer';
 import Location from '../components/Location';
-import {StatusBar} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {
@@ -29,6 +36,7 @@ class HomeScreen extends React.Component {
     );
 
   componentDidMount() {
+    this.props.getUserLocation();
     this.props.get().then(() => {
       this.setState({
         featuredLocation: this.props.locations.find(
@@ -47,9 +55,8 @@ class HomeScreen extends React.Component {
         <ScrollView style={styles.screen}>
           <FeaturedLocation
             location={this.state.featuredLocation}
-            onSearch={() => {
-              this.props.navigation.navigate('Search');
-            }}
+            onSearch={() => this.props.navigation.navigate('Search')}
+            onOpenMap={() => this.props.navigation.navigate('Map')}
           />
           {this.props.didReserve && (
             <ReservationContainer
@@ -109,10 +116,13 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   locations: state.locations.locations,
   didReserve: state.users.didReserve,
+  userLocation: state.users.location,
+  nearby: state.locations.nearbyLocations,
 });
 
 const mapDispatchToProps = {
   get: getLocations,
+  getUserLocation,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

@@ -18,13 +18,3 @@ react-native run-android
 ```
 react-native run-ios
 ```
-5. Create an ```env.js``` file in the project's directory ```"../Rakneti"```
-6. Add the following code in this file
-```
-const vars = {
-  googleApiKey: 'AIzaSyAoEuPReyWQ1VoayCnbsQjsdugbIah45Zc',
-};
-
-export default vars;
-
-```

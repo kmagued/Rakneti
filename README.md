@@ -10,11 +10,19 @@
 ```
 npm install
 ```
-3. Run this command to build the app and run it on Android Emulator (Android Studio)
+3. Install pods on iOS
+```
+cd ios && pod install
+```
+4. Link libraries to your app
+ ```
+ react-native link
+ ```
+5. Run this command to build the app and run it on Android Emulator (Android Studio)
 ```
 react-native run-android
 ```
-4. Run this command to build the app and run it on iOS
+6. Run this command to build the app and run it on iOS
 ```
 react-native run-ios
 ```

@@ -10,7 +10,7 @@
 ```
 npm install
 ```
-3. Install pods on iOS
+3. Run this command in the project's directory ```"../Rakneti"``` to install pods on iOS
 ```
 cd ios && pod install
 ```

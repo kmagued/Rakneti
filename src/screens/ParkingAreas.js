@@ -33,7 +33,7 @@ class ParkingAreas extends React.Component {
           <View
             style={{
               height: '30%',
-              backgroundColor: 'rgb(248, 249, 253)',
+              backgroundColor: 'whitesmoke',
               justifyContent: 'center',
             }}>
             <TextComp bold style={styles.text}>

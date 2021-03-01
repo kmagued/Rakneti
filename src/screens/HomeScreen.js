@@ -36,8 +36,8 @@ class HomeScreen extends React.Component {
     );
 
   componentDidMount() {
-    this.props.getUserLocation();
     this.props.get().then(() => {
+      this.props.getUserLocation();
       this.setState({
         featuredLocation: this.props.locations.find(
           (location) => location.name === 'American University in Cairo',
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
   locations: state.locations.locations,
   didReserve: state.users.didReserve,
-  userLocation: state.users.location,
+  userLocation: state.locations.userLocation,
   nearby: state.locations.nearbyLocations,
 });
 

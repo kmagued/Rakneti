@@ -11,6 +11,7 @@ const initialState = {
   locations: [],
   bookmarkedLocations: [],
   nearbyLocations: [],
+  userLocation: null,
 };
 
 const locationsReducer = (state = initialState, action) => {
@@ -47,7 +48,7 @@ const locationsReducer = (state = initialState, action) => {
           latitude: loc.coordinates.lat,
           longitude: loc.coordinates.lng,
         });
-        if (distance < 2000) {
+        if (distance < 3000) {
           nearby.push(loc);
         }
       });
@@ -55,6 +56,10 @@ const locationsReducer = (state = initialState, action) => {
       return {
         ...state,
         nearbyLocations: nearby,
+        userLocation: {
+          lat: action.position.coords.latitude,
+          lng: action.position.coords.longitude,
+        },
       };
 
     default:

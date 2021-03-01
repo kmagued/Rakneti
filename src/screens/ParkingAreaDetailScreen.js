@@ -15,7 +15,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {
   addToBookmarkedLocations,
-  getLocations,
   removeFromBookmarkedLocations,
   reserveLocation,
   updateLocations,
@@ -32,7 +31,6 @@ class ParkingAreaDetailScreen extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.props.get();
     setInterval(() => {
       this.props.update(this.props.route.params.parkingName).then(() => {
         this._isMounted && this.setState({update: true});
@@ -309,7 +307,6 @@ const mapDispatchToProps = {
   add: addToBookmarkedLocations,
   remove: removeFromBookmarkedLocations,
   update: updateLocations,
-  get: getLocations,
 };
 
 export default connect(

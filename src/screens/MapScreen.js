@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 //Constants & Components
-import MapView, {Marker, PROVIDER_GOOGLE, Circle} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import SwiperList from 'react-native-swiper-flatlist';
@@ -19,9 +19,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {getDistance} from 'geolib';
 import {getUserLocation} from '../store/actions/locations';
+import {Platform} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const CIRCLE_RADIUS = 3000;
+const CIRCLE_RADIUS = 4000;
 const LATITUDE_DELTA = 0.0622;
 const LONGITUDE_DELTA = 0.0621;
 
@@ -42,10 +43,9 @@ class MapScreen extends React.Component {
       longitudeDelta: LONGITUDE_DELTA,
       latitudeDelta: LATITUDE_DELTA,
     },
-    availableAreas: [],
     show: false,
     userLocation: {},
-    changed: false,
+    curIndex: null,
   };
 
   renderEmpty = () => (
@@ -59,44 +59,6 @@ class MapScreen extends React.Component {
       <TextComp style={{fontSize: 16}}>No locations found!</TextComp>
     </View>
   );
-
-  onLocationChange = (region) => {
-    this._mounted &&
-      this.setState({
-        userRegion: {
-          latitude: region.nativeEvent.coordinate.latitude,
-          longitude: region.nativeEvent.coordinate.longitude,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        },
-      });
-    const availableLocations =
-      this._mounted && this.calculateDistance(region.nativeEvent.coordinate);
-    this._mounted && this.setState({availableAreas: availableLocations});
-  };
-
-  calculateDistance = (newLoc) => {
-    this.setState({availableAreas: []});
-    let areas = [];
-
-    this.props.locations.forEach((loc) => {
-      let distance = getDistance(
-        {
-          latitude: loc.coordinates.lat,
-          longitude: loc.coordinates.lng,
-        },
-        {
-          latitude: newLoc.latitude,
-          longitude: newLoc.longitude,
-        },
-      );
-      if (distance < CIRCLE_RADIUS) {
-        areas.push(loc);
-      }
-    });
-
-    return areas;
-  };
 
   renderNearbyLocation = (itemData) => (
     <TouchableOpacity
@@ -130,11 +92,11 @@ class MapScreen extends React.Component {
   );
 
   onPressMarker = (location, latlng) => {
-    const id = this.state.availableAreas.findIndex(
+    const id = this.props.nearby.findIndex(
       (area) => area.name === location.name,
     );
     if (id !== -1)
-      this.setState({show: true}, () => {
+      this.setState({show: true, curIndex: id}, () => {
         this.list.scrollToIndex({index: id});
       });
     this.map.animateToRegion({
@@ -144,13 +106,12 @@ class MapScreen extends React.Component {
     });
   };
 
-  componentDidMount() {
-    this._mounted = true;
+  componentWillUnmount() {
+    this.props.getUserLocation();
   }
 
-  componentWillUnmount() {
-    this._mounted = false;
-    this.props.getUserLocation();
+  shouldComponentUpdate(prevProps) {
+    return prevProps.nearby !== this.props.nearby || this.props.locations;
   }
 
   render() {
@@ -324,7 +285,7 @@ class MapScreen extends React.Component {
         elementType: 'geometry.fill',
         stylers: [
           {
-            color: Colors.secondary,
+            color: 'grey',
             weight: 2,
           },
         ],
@@ -404,59 +365,74 @@ class MapScreen extends React.Component {
 
     return (
       <>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar
+          barStyle={Platform.OS === 'ios' ? 'dark-content' : 'default'}
+        />
         <View style={styles.screen}>
           <MapView
             ref={(ref) => (this.map = ref)}
             style={styles.map}
-            showsMyLocationButton
-            onUserLocationChange={this.onLocationChange}
             showsUserLocation
             provider={PROVIDER_GOOGLE}
             zoomTapEnabled
             zoomEnabled
             customMapStyle={mapStyle}
             initialRegion={this.state.region}
-            onRegionChange={(region) => {
-              this.setState({region, changed: true}, () => {
-                this.circle.setNativeProps({
-                  fillColor: 'rgba(52, 212, 132, 0.3)',
-                });
-              });
+            onRegionChangeComplete={(region) => {
+              this.setState({region});
             }}>
-            <TouchableOpacity
-              style={{paddingTop: 60, paddingLeft: 20}}
-              onPress={() => this.props.navigation.goBack()}>
-              <Ionicons
-                name="ios-arrow-back"
-                size={30}
-                color={Colors.secondary}
-              />
-            </TouchableOpacity>
-            {this.state.changed && (
-              <Circle
-                ref={(ref) => (this.circle = ref)}
-                center={this.state.userRegion}
-                radius={CIRCLE_RADIUS}
-                fillColor="rgba(52,212,132, 0.3)"
-                strokeWidth={0}
-              />
+            {Platform.OS === 'ios' && (
+              <TouchableOpacity
+                style={{paddingTop: 60, paddingLeft: 20}}
+                onPress={() => this.props.navigation.goBack()}>
+                <Ionicons
+                  name="ios-arrow-back"
+                  size={30}
+                  color={Colors.secondary}
+                />
+              </TouchableOpacity>
             )}
+            {/* Markers */}
             {this.props.locations.map((location, index) => {
               const latlng = {
                 latitude: parseFloat(location.coordinates.lat),
                 longitude: parseFloat(location.coordinates.lng),
               };
+              const id = this.props.nearby.findIndex(
+                (area) => area.name === location.name,
+              );
+
               return (
-                this.state.availableAreas.find(
-                  (loc) => loc.name === location.name,
-                ) && (
+                this.props.nearby.find((loc) => loc.name === location.name) && (
                   <Marker
                     key={index}
+                    tracksInfoWindowChanges={false}
                     coordinate={latlng}
                     ref={(ref) => (this.marker = ref)}
-                    onPress={() => this.onPressMarker(location, latlng)}
-                  />
+                    onPress={() => this.onPressMarker(location, latlng)}>
+                    <View style={{width: 120, alignItems: 'center'}}>
+                      {id === this.state.curIndex && (
+                        <TextComp
+                          black
+                          numOfLines={2}
+                          style={{
+                            textAlign: 'center',
+                            color: Colors.secondary,
+                          }}>
+                          {location.name}
+                        </TextComp>
+                      )}
+                      <Ionicons
+                        name="ios-location-sharp"
+                        size={id === this.state.curIndex ? 40 : 30}
+                        color={
+                          id === this.state.curIndex
+                            ? Colors.primaryColor
+                            : 'grey'
+                        }
+                      />
+                    </View>
+                  </Marker>
                 )
               );
             })}
@@ -466,21 +442,29 @@ class MapScreen extends React.Component {
               activeOpacity={1}
               style={styles.nearbyContainer}
               onPress={() => {
-                this.setState({show: !this.state.show}, () => {
-                  this.state.availableAreas.length > 0 &&
-                    this.map.animateToRegion({
-                      latitude: parseFloat(
-                        this.state.availableAreas[0].coordinates.lat,
-                      ),
-                      longitude: parseFloat(
-                        this.state.availableAreas[0].coordinates.lng,
-                      ),
-                      latitudeDelta: this.state.show ? 0.0222 : LATITUDE_DELTA,
-                      longitudeDelta: this.state.show
-                        ? 0.0321
-                        : LONGITUDE_DELTA,
-                    });
-                });
+                this.setState(
+                  {
+                    show: !this.state.show,
+                    curIndex: !this.state.show ? 0 : null,
+                  },
+                  () => {
+                    this.props.nearby.length > 0 &&
+                      this.map.animateToRegion({
+                        latitude: parseFloat(
+                          this.props.nearby[0].coordinates.lat,
+                        ),
+                        longitude: parseFloat(
+                          this.props.nearby[0].coordinates.lng,
+                        ),
+                        latitudeDelta: this.state.show
+                          ? 0.0222
+                          : LATITUDE_DELTA,
+                        longitudeDelta: this.state.show
+                          ? 0.0321
+                          : LONGITUDE_DELTA,
+                      });
+                  },
+                );
               }}>
               <TextComp
                 bold
@@ -493,27 +477,30 @@ class MapScreen extends React.Component {
                 size={25}
               />
             </TouchableOpacity>
+            {/* Nearby Areas List */}
             {this.state.show && (
               <SwiperList
                 ref={(ref) => (this.list = ref)}
                 ListEmptyComponent={this.renderEmpty}
-                data={this.state.availableAreas}
+                data={this.props.nearby}
                 keyExtractor={(item) => item.name}
                 renderItem={this.renderNearbyLocation}
                 onChangeIndex={(item) => {
-                  this.map.animateToRegion({
-                    latitude: parseFloat(
-                      this.state.availableAreas[item.index].coordinates.lat,
-                    ),
-                    longitude: parseFloat(
-                      this.state.availableAreas[item.index].coordinates.lng,
-                    ),
-                    latitudeDelta: 0.0222,
-                    longitudeDelta: 0.0321,
+                  this.setState({curIndex: item.index}, () => {
+                    this.map.animateToRegion({
+                      latitude: parseFloat(
+                        this.props.nearby[item.index].coordinates.lat,
+                      ),
+                      longitude: parseFloat(
+                        this.props.nearby[item.index].coordinates.lng,
+                      ),
+                      latitudeDelta: 0.0222,
+                      longitudeDelta: 0.0321,
+                    });
                   });
                 }}
                 contentContainerStyle={{
-                  flex: this.state.availableAreas.length === 0 ? 1 : null,
+                  flex: this.props.nearby.length === 0 ? 1 : null,
                 }}
               />
             )}
@@ -561,8 +548,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  userLocation: state.users.location,
+  userLocation: state.locations.userLocation,
   locations: state.locations.locations,
+  nearby: state.locations.nearbyLocations,
 });
 
 const mapDispatchToProps = {

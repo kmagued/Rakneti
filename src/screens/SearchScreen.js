@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgb(248, 249, 253)',
+    backgroundColor: 'whitesmoke',
     borderRadius: 10,
   },
   inputContainer: {

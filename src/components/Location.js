@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   placeContainer: {
     width: SCREEN_WIDTH / 1.1,
     alignSelf: 'center',
-    backgroundColor: 'rgb(248, 249, 253)',
+    backgroundColor: 'whitesmoke',
     borderRadius: 20,
     marginHorizontal: 8,
     marginVertical: 5,

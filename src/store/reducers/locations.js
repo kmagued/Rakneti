@@ -4,6 +4,7 @@ import {
   ADD_LOCATION,
   UPDATE_LOCATIONS,
   SET_NEARBY_LOCATIONS,
+  SET_CURRENT_MARKER,
 } from '../actions/locations';
 import {getDistance} from 'geolib';
 
@@ -12,6 +13,7 @@ const initialState = {
   bookmarkedLocations: [],
   nearbyLocations: [],
   userLocation: null,
+  selectedLocation: null,
 };
 
 const locationsReducer = (state = initialState, action) => {
@@ -44,7 +46,7 @@ const locationsReducer = (state = initialState, action) => {
       let nearby = [];
 
       state.locations.forEach((loc) => {
-        let distance = getDistance(action.position.coords, {
+        let distance = getDistance(action.position, {
           latitude: loc.coordinates.lat,
           longitude: loc.coordinates.lng,
         });
@@ -57,11 +59,15 @@ const locationsReducer = (state = initialState, action) => {
         ...state,
         nearbyLocations: nearby,
         userLocation: {
-          lat: action.position.coords.latitude,
-          lng: action.position.coords.longitude,
+          latitude: action.position.latitude,
+          longitude: action.position.longitude,
         },
       };
-
+    case SET_CURRENT_MARKER:
+      return {
+        ...state,
+        selectedLocation: action.location,
+      };
     default:
       return state;
   }

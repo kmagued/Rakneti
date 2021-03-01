@@ -10,6 +10,7 @@ export const UPDATE_LOCATIONS = 'UPDATE_LOCATIONS';
 export const RESERVE_PLACE = 'RESERVE_PLACE';
 export const CANCEL = 'CANCEL';
 export const SET_NEARBY_LOCATIONS = 'SET_NEARBY_LOCATIONS';
+export const SET_CURRENT_MARKER = 'SET_CURRENT_MARKER';
 
 import Geolocation from 'react-native-geolocation-service';
 import {Platform} from 'react-native';
@@ -210,7 +211,7 @@ export const getUserLocation = () => async (dispatch) => {
       (position) => {
         dispatch({
           type: SET_NEARBY_LOCATIONS,
-          position,
+          position: position.coords,
         });
       },
       (error) => {
@@ -228,7 +229,7 @@ export const getUserLocation = () => async (dispatch) => {
           (position) => {
             dispatch({
               type: SET_NEARBY_LOCATIONS,
-              position,
+              position: position.coords,
             });
           },
           (error) => {
@@ -238,4 +239,18 @@ export const getUserLocation = () => async (dispatch) => {
         )
       : null;
   }
+};
+
+export const setUserLocation = (position) => async (dispatch) => {
+  dispatch({
+    type: SET_NEARBY_LOCATIONS,
+    position,
+  });
+};
+
+export const selectMarker = (location) => async (dispatch) => {
+  dispatch({
+    type: SET_CURRENT_MARKER,
+    location,
+  });
 };

@@ -189,8 +189,7 @@ class ParkingAreaDetailScreen extends React.Component {
                       fontSize: 16,
                     }}>
                     {area.name}
-                    <TextComp
-                      style={{color: Colors.primaryColor, fontSize: 14}}>
+                    <TextComp black style={{color: 'white', fontSize: 14}}>
                       {' '}
                       {area.availableSpots === 1
                         ? '(1 spot left)'

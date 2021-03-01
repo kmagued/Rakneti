@@ -17,8 +17,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 //Redux & Methods
 import {connect} from 'react-redux';
-import {getDistance} from 'geolib';
-import {getUserLocation} from '../store/actions/locations';
+import {
+  getUserLocation,
+  setUserLocation,
+  selectMarker,
+} from '../store/actions/locations';
 import {Platform} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -28,8 +31,8 @@ const LONGITUDE_DELTA = 0.0621;
 
 class MapScreen extends React.Component {
   LATLNG = {
-    latitude: this.props.userLocation.lat,
-    longitude: this.props.userLocation.lng,
+    latitude: this.props.userLocation.latitude,
+    longitude: this.props.userLocation.longitude,
   };
 
   state = {
@@ -59,6 +62,13 @@ class MapScreen extends React.Component {
       <TextComp style={{fontSize: 16}}>No locations found!</TextComp>
     </View>
   );
+
+  onLocationChange = (region) => {
+    this.props.set({
+      latitude: region.nativeEvent.coordinate.latitude,
+      longitude: region.nativeEvent.coordinate.longitude,
+    });
+  };
 
   renderNearbyLocation = (itemData) => (
     <TouchableOpacity
@@ -92,17 +102,18 @@ class MapScreen extends React.Component {
   );
 
   onPressMarker = (location, latlng) => {
+    this.props.selectMarker(location);
     const id = this.props.nearby.findIndex(
       (area) => area.name === location.name,
     );
-    if (id !== -1)
-      this.setState({show: true, curIndex: id}, () => {
-        this.list.scrollToIndex({index: id});
+
+    this.setState({show: true, curIndex: id}, () => {
+      this.list.scrollToIndex({index: id});
+      this.map.animateToRegion({
+        ...latlng,
+        latitudeDelta: 0.0222,
+        longitudeDelta: 0.0321,
       });
-    this.map.animateToRegion({
-      ...latlng,
-      latitudeDelta: 0.0222,
-      longitudeDelta: 0.0321,
     });
   };
 
@@ -111,7 +122,11 @@ class MapScreen extends React.Component {
   }
 
   shouldComponentUpdate(prevProps) {
-    return prevProps.nearby !== this.props.nearby || this.props.locations;
+    return (
+      prevProps.nearby !== this.props.nearby ||
+      prevProps.userLocation !== this.props.userLocation ||
+      prevProps.selected !== this.props.selected
+    );
   }
 
   render() {
@@ -373,6 +388,7 @@ class MapScreen extends React.Component {
             ref={(ref) => (this.map = ref)}
             style={styles.map}
             showsUserLocation
+            onUserLocationChange={this.onLocationChange}
             provider={PROVIDER_GOOGLE}
             zoomTapEnabled
             zoomEnabled
@@ -442,6 +458,9 @@ class MapScreen extends React.Component {
               activeOpacity={1}
               style={styles.nearbyContainer}
               onPress={() => {
+                !this.state.show
+                  ? this.props.selectMarker(this.props.nearby[0])
+                  : this.props.selectMarker(null);
                 this.setState(
                   {
                     show: !this.state.show,
@@ -486,6 +505,7 @@ class MapScreen extends React.Component {
                 keyExtractor={(item) => item.name}
                 renderItem={this.renderNearbyLocation}
                 onChangeIndex={(item) => {
+                  this.props.selectMarker(this.props.nearby[item.index]);
                   this.setState({curIndex: item.index}, () => {
                     this.map.animateToRegion({
                       latitude: parseFloat(
@@ -551,10 +571,13 @@ const mapStateToProps = (state) => ({
   userLocation: state.locations.userLocation,
   locations: state.locations.locations,
   nearby: state.locations.nearbyLocations,
+  selected: state.locations.selectedLocation,
 });
 
 const mapDispatchToProps = {
   getUserLocation,
+  set: setUserLocation,
+  selectMarker,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);

@@ -492,8 +492,8 @@ class MapScreen extends React.Component {
                 this.map.animateToRegion({
                   longitude: this.props.userLocation.longitude,
                   latitude: this.props.userLocation.latitude,
-                  latitudeDelta: MapItems.latitudeDelta,
-                  longitudeDelta: MapItems.longitudeDelta,
+                  latitudeDelta: 0.01,
+                  longitudeDelta: 0.01,
                 });
               }}
               style={styles.showLocationBtn}

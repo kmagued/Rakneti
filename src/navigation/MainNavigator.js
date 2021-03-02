@@ -17,6 +17,7 @@ import AddLocation from '../screens/AddLocation';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import ReportScreen from '../screens/ReportScreen';
 import MapScreen from '../screens/MapScreen';
+import HistoryDetailScreen from '../screens/HistoryDetailScreen';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -97,6 +98,10 @@ export const ProfileNavigator = () => (
     <ProfileStackNavigator.Screen
       name="History"
       component={ParkingHistoryScreen}
+    />
+    <ProfileStackNavigator.Screen
+      name="HistoryDetail"
+      component={HistoryDetailScreen}
     />
   </ProfileStackNavigator.Navigator>
 );

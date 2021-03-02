@@ -92,31 +92,25 @@ class ParkingAreaDetailScreen extends React.Component {
                   /{this.state.activeArea.numberOfSpots}
                 </TextComp>
               </TextComp>
-
-              {this.props.didReserve ? (
-                <TextComp
-                  bold
-                  style={{
-                    color: Colors.primaryColor,
-                    fontSize: 20,
-                    width: '70%',
-                    textAlign: 'center',
-                  }}>
-                  You already reserved a spot
-                </TextComp>
-              ) : !this.props.nearby.find(
-                  (loc) => loc.name === parking.name,
-                ) ? (
-                <TextComp
-                  bold
-                  style={{
-                    color: Colors.primaryColor,
-                    fontSize: 20,
-                    width: '70%',
-                    textAlign: 'center',
-                  }}>
-                  Not in range of reservation
-                </TextComp>
+              {this.props.didReserve ||
+              !this.props.nearby.find((loc) => loc.name === parking.name) ? (
+                <View style={{padding: 10, width: '80%'}}>
+                  <TextComp
+                    bold
+                    style={{
+                      color: Colors.primaryColor,
+                      fontSize: 22,
+                      textAlign: 'center',
+                    }}>
+                    {this.props.didReserve
+                      ? 'ALREADY RESERVED'
+                      : !this.props.nearby.find(
+                          (loc) => loc.name === parking.name,
+                        )
+                      ? 'OUT OF RANGE'
+                      : null}
+                  </TextComp>
+                </View>
               ) : (
                 <TouchableOpacity
                   style={styles.btn}

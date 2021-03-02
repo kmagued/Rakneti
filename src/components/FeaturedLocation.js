@@ -6,14 +6,14 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import TextComp from './TextComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Colors from '../constants/Colors';
 
 const FeaturedLocation = (props) => {
   return (
-    <View style={{height: 400}}>
+    <View style={{height: Dimensions.get('window').height / 2.2}}>
       <ImageBackground
         style={{height: '100%', width: '100%'}}
         source={{

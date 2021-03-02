@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import DetailsHeader from '../components/DetailsHeader';
 import moment from 'moment';
 import {cancelReservation} from '../store/actions/locations';
+import getDirections from 'react-native-google-maps-directions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -117,6 +118,15 @@ class ReservationDetails extends React.Component {
               {/* DIRECTIONS BUTTON */}
               <View style={styles.btnContainer}>
                 <TouchableOpacity
+                  onPress={() => {
+                    getDirections({
+                      source: this.props.userLocation,
+                      destination: {
+                        latitude: parseFloat(reservedParking.coordinates.lat),
+                        longitude: parseFloat(reservedParking.coordinates.lng),
+                      },
+                    });
+                  }}
                   style={{...styles.btn, width: '90%', alignSelf: 'center'}}>
                   <TextComp bold style={{color: 'white', fontSize: 14}}>
                     GET DIRECTIONS
@@ -203,6 +213,7 @@ const mapStateToProps = (state) => ({
   reservedArea: state.users.reservedArea,
   date: state.users.reservationDate,
   user: state.users.user,
+  userLocation: state.locations.userLocation,
 });
 
 const mapDispatchToProps = {

@@ -11,6 +11,7 @@ export const RESERVE_PLACE = 'RESERVE_PLACE';
 export const CANCEL = 'CANCEL';
 export const SET_NEARBY_LOCATIONS = 'SET_NEARBY_LOCATIONS';
 export const SET_CURRENT_MARKER = 'SET_CURRENT_MARKER';
+export const DID_RESERVE = 'DID_RESERVE';
 
 import Geolocation from 'react-native-geolocation-service';
 import {Platform} from 'react-native';
@@ -253,4 +254,20 @@ export const selectMarker = (location) => async (dispatch) => {
     type: SET_CURRENT_MARKER,
     location,
   });
+};
+
+export const didReserveSpot = (uid, locations) => async (dispatch) => {
+  firebase
+    .database()
+    .ref(`reservations/${uid}`)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.val()) {
+        dispatch({
+          type: DID_RESERVE,
+          reservation: snapshot.val(),
+          locations,
+        });
+      }
+    });
 };

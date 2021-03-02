@@ -5,12 +5,11 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
-  TouchableHighlight,
 } from 'react-native';
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import {getLocations} from '../store/actions/locations';
-import {getUserLocation} from '../store/actions/locations';
+import {getUserLocation, didReserveSpot} from '../store/actions/locations';
 import {connect} from 'react-redux';
 import SwipeList from 'react-native-swiper-flatlist';
 import FeaturedLocation from '../components/FeaturedLocation';
@@ -37,10 +36,11 @@ class HomeScreen extends React.Component {
 
   componentDidMount() {
     this.props.get().then(() => {
+      this.props.didReserveSpot(this.props.user.uid, this.props.locations);
       this.props.getUserLocation();
       this.setState({
         featuredLocation: this.props.locations.find(
-          (location) => location.name === 'American University in Cairo',
+          (location) => location.name === 'Downtown Mall',
         ),
       });
     });
@@ -118,11 +118,13 @@ const mapStateToProps = (state) => ({
   didReserve: state.users.didReserve,
   userLocation: state.locations.userLocation,
   nearby: state.locations.nearbyLocations,
+  user: state.users.user,
 });
 
 const mapDispatchToProps = {
   get: getLocations,
   getUserLocation,
+  didReserveSpot,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

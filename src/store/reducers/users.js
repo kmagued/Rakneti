@@ -10,6 +10,7 @@ import {
   REMOVE_FROM_BOOKMARKED,
   RESERVE_PLACE,
   CANCEL,
+  DID_RESERVE,
 } from '../actions/locations';
 
 const initialState = {
@@ -99,6 +100,21 @@ const usersReducer = (state = initialState, action) => {
       return {
         ...state,
         didReserve: false,
+      };
+    }
+    case DID_RESERVE: {
+      const location = action.locations.find(
+        (loc) => loc.name === action.reservation.place,
+      );
+
+      return {
+        ...state,
+        didReserve: true,
+        reservationDate: action.reservation.time,
+        reservedPlace: location,
+        reservedArea: Object.values(location.parkingAreas).find(
+          (area) => area.name === action.reservation.area,
+        ),
       };
     }
     default:

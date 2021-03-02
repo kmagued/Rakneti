@@ -27,7 +27,14 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 class ProfileScreen extends React.Component {
   renderHistory = (itemData) =>
     itemData.index < 2 && (
-      <View style={styles.placeContainer}>
+      <TouchableOpacity
+        style={styles.placeContainer}
+        activeOpacity={0.8}
+        onPress={() =>
+          this.props.navigation.navigate('HistoryDetail', {
+            itemDetail: itemData.item,
+          })
+        }>
         <View style={styles.photo}>
           <Image
             source={{
@@ -50,25 +57,30 @@ class ProfileScreen extends React.Component {
           </TextComp>
           <TextComp>{itemData.item.date}</TextComp>
         </View>
-      </View>
+      </TouchableOpacity>
     );
 
   renderEmpty = () => (
-    <View style={{alignItems: 'center', marginVertical: 20}}>
+    <View
+      style={{
+        alignItems: 'center',
+        paddingVertical: 30,
+        borderRadius: 15,
+      }}>
       <>
         <FontAwesome5 name="history" size={70} color={Colors.primaryColor} />
         <View
           style={{
             ...styles.slash,
             borderColor: Colors.primaryColor,
-            marginTop: 30,
+            marginTop: 60,
           }}
         />
         <View
           style={{
             ...styles.slash,
             borderColor: 'white',
-            marginTop: 38,
+            marginTop: 68,
             borderWidth: 3,
             width: 100,
           }}
@@ -132,7 +144,7 @@ class ProfileScreen extends React.Component {
                     {this.props.user.fullName.charAt(0).toUpperCase()}
                   </TextComp>
                 </View>
-                <TextComp black style={{fontSize: 40, color: Colors.secondary}}>
+                <TextComp black style={{fontSize: 35, color: Colors.secondary}}>
                   {this.props.user.fullName}
                 </TextComp>
                 <TextComp
@@ -142,6 +154,14 @@ class ProfileScreen extends React.Component {
               </View>
             </View>
             <CarDetails car={this.props.user.carDetails} current />
+            <CarDetails
+              car={{
+                make: 'Renault',
+                model: 'Logan',
+                color: 'black',
+                licensePlate: 'قوع ٧٣٤',
+              }}
+            />
 
             <View style={styles.container}>
               <View
@@ -153,7 +173,7 @@ class ProfileScreen extends React.Component {
                 <TextComp bold style={{fontSize: 18}}>
                   Parking History
                 </TextComp>
-                {PARKING_HISTORY.length > 0 && (
+                {this.props.user.parkingHistory && (
                   <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('History')}>
                     <TextComp>See all</TextComp>
@@ -162,7 +182,7 @@ class ProfileScreen extends React.Component {
               </View>
               <FlatList
                 ListEmptyComponent={this.renderEmpty}
-                data={PARKING_HISTORY}
+                data={this.props.user.parkingHistory}
                 renderItem={this.renderHistory}
                 keyExtractor={(item) => item.name}
                 numColumns={2}

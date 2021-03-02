@@ -7,6 +7,7 @@ import {
   SET_CURRENT_MARKER,
 } from '../actions/locations';
 import {getDistance} from 'geolib';
+import MapItems from '../../constants/Map';
 
 const initialState = {
   locations: [],
@@ -50,7 +51,7 @@ const locationsReducer = (state = initialState, action) => {
           latitude: loc.coordinates.lat,
           longitude: loc.coordinates.lng,
         });
-        if (distance < 3000) {
+        if (distance < MapItems.circleRadius) {
           nearby.push(loc);
         }
       });

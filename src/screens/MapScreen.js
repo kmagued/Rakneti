@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  Platform,
 } from 'react-native';
 
 //Constants & Components
@@ -14,6 +15,8 @@ import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import SwiperList from 'react-native-swiper-flatlist';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MapItems from '../constants/Map';
 
 //Redux & Methods
 import {connect} from 'react-redux';
@@ -22,12 +25,8 @@ import {
   setUserLocation,
   selectMarker,
 } from '../store/actions/locations';
-import {Platform} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const CIRCLE_RADIUS = 4000;
-const LATITUDE_DELTA = 0.0622;
-const LONGITUDE_DELTA = 0.0621;
 
 class MapScreen extends React.Component {
   LATLNG = {
@@ -36,15 +35,10 @@ class MapScreen extends React.Component {
   };
 
   state = {
-    userRegion: {
-      ...this.LATLNG,
-      longitudeDelta: LONGITUDE_DELTA,
-      latitudeDelta: LATITUDE_DELTA,
-    },
     region: {
       ...this.LATLNG,
-      longitudeDelta: LONGITUDE_DELTA,
-      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: MapItems.longitudeDelta,
+      latitudeDelta: MapItems.latitudeDelta,
     },
     show: false,
     userLocation: {},
@@ -111,6 +105,43 @@ class MapScreen extends React.Component {
       this.list.scrollToIndex({index: id});
       this.map.animateToRegion({
         ...latlng,
+        latitudeDelta: MapItems.focusedLatitudeDelta,
+        longitudeDelta: MapItems.focusedLongitudeDelta,
+      });
+    });
+  };
+
+  onShowList = () => {
+    !this.state.show
+      ? this.props.selectMarker(this.props.nearby[0])
+      : this.props.selectMarker(null);
+    this.setState(
+      {
+        show: !this.state.show,
+        curIndex: !this.state.show ? 0 : null,
+      },
+      () => {
+        this.props.nearby.length > 0 &&
+          this.map.animateToRegion({
+            latitude: parseFloat(this.props.nearby[0].coordinates.lat),
+            longitude: parseFloat(this.props.nearby[0].coordinates.lng),
+            latitudeDelta: this.state.show
+              ? MapItems.focusedLatitudeDelta
+              : MapItems.latitudeDelta,
+            longitudeDelta: this.state.show
+              ? MapItems.focusedLongitudeDelta
+              : MapItems.longitudeDelta,
+          });
+      },
+    );
+  };
+
+  onChangeListItem = (item) => {
+    this.props.selectMarker(this.props.nearby[item.index]);
+    this.setState({curIndex: item.index}, () => {
+      this.map.animateToRegion({
+        latitude: parseFloat(this.props.nearby[item.index].coordinates.lat),
+        longitude: parseFloat(this.props.nearby[item.index].coordinates.lng),
         latitudeDelta: 0.0222,
         longitudeDelta: 0.0321,
       });
@@ -397,6 +428,7 @@ class MapScreen extends React.Component {
             onRegionChangeComplete={(region) => {
               this.setState({region});
             }}>
+            {/* Back Button */}
             {Platform.OS === 'ios' && (
               <TouchableOpacity
                 style={{paddingTop: 60, paddingLeft: 20}}
@@ -454,37 +486,29 @@ class MapScreen extends React.Component {
             })}
           </MapView>
           <View style={{width: '100%', position: 'absolute'}}>
+            {/* Show location Button */}
+            <TouchableOpacity
+              onPress={() => {
+                this.map.animateToRegion({
+                  longitude: this.props.userLocation.longitude,
+                  latitude: this.props.userLocation.latitude,
+                  latitudeDelta: MapItems.latitudeDelta,
+                  longitudeDelta: MapItems.longitudeDelta,
+                });
+              }}
+              style={styles.showLocationBtn}
+              activeOpacity={0.8}>
+              <MaterialIcons
+                name="my-location"
+                size={30}
+                color={Colors.secondary}
+              />
+            </TouchableOpacity>
+            {/* Show List */}
             <TouchableOpacity
               activeOpacity={1}
-              style={styles.nearbyContainer}
-              onPress={() => {
-                !this.state.show
-                  ? this.props.selectMarker(this.props.nearby[0])
-                  : this.props.selectMarker(null);
-                this.setState(
-                  {
-                    show: !this.state.show,
-                    curIndex: !this.state.show ? 0 : null,
-                  },
-                  () => {
-                    this.props.nearby.length > 0 &&
-                      this.map.animateToRegion({
-                        latitude: parseFloat(
-                          this.props.nearby[0].coordinates.lat,
-                        ),
-                        longitude: parseFloat(
-                          this.props.nearby[0].coordinates.lng,
-                        ),
-                        latitudeDelta: this.state.show
-                          ? 0.0222
-                          : LATITUDE_DELTA,
-                        longitudeDelta: this.state.show
-                          ? 0.0321
-                          : LONGITUDE_DELTA,
-                      });
-                  },
-                );
-              }}>
+              style={styles.showListBtn}
+              onPress={this.onShowList}>
               <TextComp
                 bold
                 style={{fontSize: 18, color: 'white', paddingVertical: 15}}>
@@ -504,21 +528,7 @@ class MapScreen extends React.Component {
                 data={this.props.nearby}
                 keyExtractor={(item) => item.name}
                 renderItem={this.renderNearbyLocation}
-                onChangeIndex={(item) => {
-                  this.props.selectMarker(this.props.nearby[item.index]);
-                  this.setState({curIndex: item.index}, () => {
-                    this.map.animateToRegion({
-                      latitude: parseFloat(
-                        this.props.nearby[item.index].coordinates.lat,
-                      ),
-                      longitude: parseFloat(
-                        this.props.nearby[item.index].coordinates.lng,
-                      ),
-                      latitudeDelta: 0.0222,
-                      longitudeDelta: 0.0321,
-                    });
-                  });
-                }}
+                onChangeIndex={this.onChangeListItem}
                 contentContainerStyle={{
                   flex: this.props.nearby.length === 0 ? 1 : null,
                 }}
@@ -550,20 +560,24 @@ const styles = StyleSheet.create({
     width: 30,
     borderRadius: 15,
   },
-  showBtn: {
-    alignSelf: 'center',
-    backgroundColor: Colors.primaryColor,
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  nearbyContainer: {
+  showListBtn: {
     backgroundColor: Colors.secondary,
     paddingHorizontal: 20,
     paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  showLocationBtn: {
+    alignSelf: 'flex-end',
+    marginRight: 10,
+    marginBottom: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
   },
 });
 

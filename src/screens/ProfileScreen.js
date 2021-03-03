@@ -15,6 +15,7 @@ import Header from '../components/Header';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
 import CarDetails from '../components/CarDetails';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 //Redux
 import {connect} from 'react-redux';
@@ -110,14 +111,9 @@ class ProfileScreen extends React.Component {
 
     return (
       <>
-        <SafeAreaView style={{backgroundColor: Colors.secondary}} />
         <SafeAreaView style={styles.screen}>
+          <FocusAwareStatusBar barStyle="dark-content" />
           <Header
-            centerComponent={
-              <TextComp style={{color: 'white', fontSize: 20}}>
-                Profile
-              </TextComp>
-            }
             rightComponent={
               <TouchableOpacity
                 onPress={() => {
@@ -132,7 +128,11 @@ class ProfileScreen extends React.Component {
                     },
                   ]);
                 }}>
-                <MaterialIcons name="logout" size={23} color="white" />
+                <MaterialIcons
+                  name="logout"
+                  size={23}
+                  color={Colors.secondary}
+                />
               </TouchableOpacity>
             }
           />
@@ -153,15 +153,9 @@ class ProfileScreen extends React.Component {
                 </TextComp>
               </View>
             </View>
-            <CarDetails car={this.props.user.carDetails} current />
-            <CarDetails
-              car={{
-                make: 'Renault',
-                model: 'Logan',
-                color: 'black',
-                licensePlate: 'قوع ٧٣٤',
-              }}
-            />
+            <View style={{paddingHorizontal: 30}}>
+              <CarDetails car={this.props.user.carDetails} />
+            </View>
 
             <View style={styles.container}>
               <View
@@ -173,7 +167,7 @@ class ProfileScreen extends React.Component {
                 <TextComp bold style={{fontSize: 18}}>
                   Parking History
                 </TextComp>
-                {this.props.user.parkingHistory && (
+                {PARKING_HISTORY && (
                   <TouchableOpacity
                     onPress={() => this.props.navigation.navigate('History')}>
                     <TextComp>See all</TextComp>
@@ -182,7 +176,7 @@ class ProfileScreen extends React.Component {
               </View>
               <FlatList
                 ListEmptyComponent={this.renderEmpty}
-                data={this.props.user.parkingHistory}
+                data={PARKING_HISTORY}
                 renderItem={this.renderHistory}
                 keyExtractor={(item) => item.name}
                 numColumns={2}

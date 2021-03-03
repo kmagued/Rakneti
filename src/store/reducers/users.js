@@ -4,6 +4,8 @@ import {
   AUTHENTICATE,
   LOGOUT,
   LOCAL_SIGNIN,
+  OPEN_CAR_SCREEN,
+  CANCEL_CAR_CHOICE,
 } from '../actions/users';
 import {
   SET_BOOKMARKED_LOCATIONS,
@@ -22,6 +24,7 @@ const initialState = {
   reservedPlace: null,
   reservedArea: null,
   reservationDate: null,
+  car: null,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -115,6 +118,18 @@ const usersReducer = (state = initialState, action) => {
         reservedArea: Object.values(location.parkingAreas).find(
           (area) => area.name === action.reservation.area,
         ),
+      };
+    }
+    case OPEN_CAR_SCREEN: {
+      return {
+        ...state,
+        car: true,
+      };
+    }
+    case CANCEL_CAR_CHOICE: {
+      return {
+        ...state,
+        car: false,
       };
     }
     default:

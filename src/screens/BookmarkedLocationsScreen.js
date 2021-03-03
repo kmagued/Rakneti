@@ -35,6 +35,7 @@ class BookmarkedLocationsScreen extends React.Component {
   render() {
     return (
       <>
+        <StatusBar barStyle="light-content" />
         <SafeAreaView style={{backgroundColor: Colors.secondary}} />
         <SafeAreaView style={styles.screen}>
           <View style={styles.headerContainer}>

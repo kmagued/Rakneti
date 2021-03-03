@@ -13,6 +13,7 @@ import TextComp from '../components/TextComp';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import {StatusBar} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -48,16 +49,21 @@ class ParkingAreas extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={{backgroundColor: Colors.secondary}} />
+        <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.screen}>
           <Header
-            style={{backgroundColor: Colors.secondary}}
             centerComponent={
-              <TextComp style={styles.title}>Parking Areas</TextComp>
+              <TextComp bold style={styles.title}>
+                Parking Areas
+              </TextComp>
             }
             leftComponent={
               <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                <Ionicons name="ios-arrow-back" size={30} color="white" />
+                <Ionicons
+                  name="ios-arrow-back"
+                  size={30}
+                  color={Colors.secondary}
+                />
               </TouchableOpacity>
             }
           />
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    color: 'white',
+    color: Colors.secondary,
   },
   locationContainer: {
     margin: 5,

@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  ImageBackground,
 } from 'react-native';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
@@ -13,6 +14,7 @@ import Input from '../components/Input';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {login} from '../store/actions/users';
+import {Image} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {
@@ -52,84 +54,101 @@ class HomeScreen extends React.Component {
     const {email, password, error, loading} = this.state;
 
     return (
-      <SafeAreaView style={styles.screen}>
-        {/* Title */}
-        <View style={styles.container}>
-          <TextComp style={{fontSize: 40}}>
-            <TextComp bold style={{fontSize: 80, color: Colors.primaryColor}}>
-              R
-            </TextComp>
-            AKNETI
-          </TextComp>
-          <TextComp style={{fontSize: 18}}>Sign in to your account</TextComp>
-        </View>
-        {/* Inputs */}
-        <View style={{paddingTop: 40}}>
-          <Input
-            icon={<Ionicons name="md-mail" size={18} />}
-            placeholder="Email"
-            autoCapitalize="none"
-            value={email}
-            email
-            onChangeText={(email) => {
-              this.setState({email, error: ''});
-            }}
-          />
-          <Input
-            icon={<Ionicons name="md-lock-closed" size={18} />}
-            placeholder="Password"
-            value={password}
-            secureTextEntry
-            onChangeText={(password) => {
-              this.setState({password, error: ''});
-            }}
-          />
-          <TouchableOpacity style={styles.forgotPasswordContainer}>
-            <TextComp style={{color: 'grey'}}>Forgot your password?</TextComp>
-          </TouchableOpacity>
-        </View>
-        {/* Error */}
-
-        <View style={styles.errorContainer}>
-          {loading ? (
-            <ActivityIndicator size="small" color={Colors.primaryColor} />
-          ) : (
-            <TextComp bold style={{color: Colors.error}}>
-              {error}
-            </TextComp>
-          )}
-        </View>
-        {/* Sign in Button */}
-        <View style={styles.btnContainer}>
-          <TextComp bold style={styles.btn}>
-            Sign in
-          </TextComp>
-          <TouchableOpacity
-            onPress={() =>
-              this.loginHandler(this.state.email, this.state.password)
-            }>
-            <Ionicons
-              name="arrow-forward-circle"
-              color={Colors.primaryColor}
-              size={50}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Footer */}
-        <View style={styles.footer}>
-          <TextComp>
-            Don't have an account?{' '}
-            <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate('Signup');
-              }}>
-              <TextComp black style={{textDecorationLine: 'underline'}}>
-                Create
+      <View style={styles.screen}>
+        <ImageBackground
+          style={{width: '100%', height: '100%'}}
+          source={{
+            uri:
+              'https://image.freepik.com/free-photo/empty-parking-lot-parking-lane-outdoor-public-park_1127-3374.jpg',
+          }}>
+          {/* Title */}
+          <View style={{flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)'}}>
+            <View style={styles.container}>
+              <TextComp style={{fontSize: 40, color: 'white'}}>
+                <TextComp
+                  bold
+                  style={{fontSize: 80, color: Colors.primaryColor}}>
+                  R
+                </TextComp>
+                AKNETI
               </TextComp>
-            </TouchableOpacity>
-          </TextComp>
-        </View>
-      </SafeAreaView>
+              <TextComp style={{fontSize: 18, color: 'white'}}>
+                Sign in to your account
+              </TextComp>
+            </View>
+            {/* Inputs */}
+            <View style={{paddingTop: 40}}>
+              <Input
+                icon={<Ionicons name="md-mail" size={18} />}
+                placeholder="Email"
+                autoCapitalize="none"
+                value={email}
+                email
+                onChangeText={(email) => {
+                  this.setState({email, error: ''});
+                }}
+              />
+              <Input
+                icon={<Ionicons name="md-lock-closed" size={18} />}
+                placeholder="Password"
+                value={password}
+                secureTextEntry
+                onChangeText={(password) => {
+                  this.setState({password, error: ''});
+                }}
+              />
+              <TouchableOpacity style={styles.forgotPasswordContainer}>
+                <TextComp style={{color: 'white'}}>
+                  Forgot your password?
+                </TextComp>
+              </TouchableOpacity>
+            </View>
+            {/* Error */}
+
+            <View style={styles.errorContainer}>
+              {loading ? (
+                <ActivityIndicator size="small" color={Colors.primaryColor} />
+              ) : (
+                <TextComp black style={{color: Colors.primaryColor}}>
+                  {error}
+                </TextComp>
+              )}
+            </View>
+            {/* Sign in Button */}
+            <View style={styles.btnContainer}>
+              <TextComp bold style={styles.btn}>
+                Sign in
+              </TextComp>
+              <TouchableOpacity
+                onPress={() =>
+                  this.loginHandler(this.state.email, this.state.password)
+                }>
+                <Ionicons
+                  name="arrow-forward-circle"
+                  color={Colors.primaryColor}
+                  size={50}
+                />
+              </TouchableOpacity>
+            </View>
+            {/* Footer */}
+            <View style={styles.footer}>
+              <TextComp style={{color: 'white'}}>
+                Don't have an account?{' '}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('Signup');
+                  }}>
+                  <TextComp
+                    black
+                    style={{textDecorationLine: 'underline', color: 'white'}}>
+                    Create
+                  </TextComp>
+                </TouchableOpacity>
+              </TextComp>
+            </View>
+          </View>
+        </ImageBackground>
+      </View>
     );
   }
 }
@@ -174,6 +193,7 @@ const styles = StyleSheet.create({
   btn: {
     fontSize: 30,
     marginRight: 10,
+    color: 'white',
   },
   footer: {
     flex: 0.2,

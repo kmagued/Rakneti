@@ -4,8 +4,6 @@ import {
   StyleSheet,
   SafeAreaView,
   FlatList,
-  TouchableOpacity,
-  ImageBackground,
   StatusBar,
 } from 'react-native';
 import TextComp from '../components/TextComp';
@@ -13,8 +11,27 @@ import Colors from '../constants/Colors';
 import {connect} from 'react-redux';
 import {removeFromBookmarkedLocations} from '../store/actions/locations';
 import Location from '../components/Location';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class BookmarkedLocationsScreen extends React.Component {
+  renderEmpty = () => (
+    <View style={styles.emptyContainer}>
+      <Ionicons
+        name="heart-dislike-outline"
+        size={100}
+        color="rgba(52,212,132,0.4)"
+      />
+      <TextComp
+        style={{
+          fontSize: 18,
+          alignSelf: 'center',
+          color: Colors.secondary,
+          marginTop: 10,
+        }}>
+        Your favorites will show up here
+      </TextComp>
+    </View>
+  );
   renderPlace = (itemData) => {
     return (
       <Location
@@ -31,7 +48,6 @@ class BookmarkedLocationsScreen extends React.Component {
       />
     );
   };
-
   render() {
     return (
       <>
@@ -44,6 +60,8 @@ class BookmarkedLocationsScreen extends React.Component {
             </TextComp>
           </View>
           <FlatList
+            contentContainerStyle={{flex: 1}}
+            ListEmptyComponent={this.renderEmpty}
             showsVerticalScrollIndicator={false}
             data={Object.values(this.props.user.bookmarkedLocations)}
             keyExtractor={(item) => item.name}
@@ -89,6 +107,11 @@ const styles = StyleSheet.create({
     width: '36%',
     borderRadius: 15,
     overflow: 'hidden',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

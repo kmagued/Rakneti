@@ -14,7 +14,6 @@ import Input from '../components/Input';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {connect} from 'react-redux';
 import {login} from '../store/actions/users';
-import {Image} from 'react-native';
 
 class HomeScreen extends React.Component {
   state = {

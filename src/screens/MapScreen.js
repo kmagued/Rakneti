@@ -45,6 +45,10 @@ class MapScreen extends React.Component {
     curIndex: null,
   };
 
+  componentDidMount() {
+    this._mounted = true;
+  }
+
   renderEmpty = () => (
     <View
       style={{
@@ -58,10 +62,11 @@ class MapScreen extends React.Component {
   );
 
   onLocationChange = (region) => {
-    this.props.set({
-      latitude: region.nativeEvent.coordinate.latitude,
-      longitude: region.nativeEvent.coordinate.longitude,
-    });
+    this._mounted &&
+      this.props.set({
+        latitude: region.nativeEvent.coordinate.latitude,
+        longitude: region.nativeEvent.coordinate.longitude,
+      });
   };
 
   renderNearbyLocation = (itemData) => (
@@ -149,13 +154,13 @@ class MapScreen extends React.Component {
   };
 
   componentWillUnmount() {
+    this._mounted = false;
     this.props.getUserLocation();
   }
 
   shouldComponentUpdate(prevProps) {
     return (
       prevProps.nearby !== this.props.nearby ||
-      prevProps.userLocation !== this.props.userLocation ||
       prevProps.selected !== this.props.selected
     );
   }

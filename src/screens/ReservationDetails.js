@@ -17,6 +17,7 @@ import DetailsHeader from '../components/DetailsHeader';
 import moment from 'moment';
 import {cancelReservation} from '../store/actions/locations';
 import getDirections from 'react-native-google-maps-directions';
+import {Overlay} from 'react-native-elements';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -26,6 +27,7 @@ class ReservationDetails extends React.Component {
 
   state = {
     time: moment(this.now).format('mm:ss'),
+    visible: false,
   };
 
   componentDidMount() {
@@ -80,9 +82,56 @@ class ReservationDetails extends React.Component {
           scrollEnabled={SCREEN_HEIGHT < 800}
           contentContainerStyle={{flex: SCREEN_HEIGHT < 800 ? null : 1}}
           style={styles.screen}>
+          <Overlay
+            animationType="slide"
+            overlayStyle={{
+              flex: 1,
+              width: '100%',
+            }}
+            isVisible={this.state.visible}>
+            <>
+              <TouchableOpacity
+                style={{
+                  flex: 0.1,
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                }}
+                onPress={() => this.setState({visible: false})}>
+                <Ionicons name="ios-close" size={35} />
+              </TouchableOpacity>
+              <View
+                style={{
+                  flex: 0.2,
+                  justifyContent: 'center',
+                  width: '80%',
+                  alignSelf: 'center',
+                }}>
+                <TextComp style={{fontSize: 16, textAlign: 'center'}}>
+                  Scan this code on the scanner at the gate if the barrier
+                  doesn't open instantly
+                </TextComp>
+              </View>
+              <View style={{flex: 0.7, alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: Dimensions.get('window').width / 1.1,
+                    height: Dimensions.get('window').width / 1.1,
+                  }}>
+                  <Image
+                    style={{width: '100%', height: '100%'}}
+                    source={{
+                      uri:
+                        'https://www.kaspersky.com/content/en-global/images/repository/isc/2020/9910/a-guide-to-qr-codes-and-how-to-scan-qr-codes-2.png',
+                    }}
+                  />
+                </View>
+              </View>
+            </>
+          </Overlay>
           <View style={{flex: SCREEN_HEIGHT < 800 ? null : 0.95}}>
             <DetailsHeader
               onBack={() => this.props.navigation.navigate('Home')}
+              onOpenQR={() => this.setState({visible: true})}
             />
             <View style={{marginHorizontal: 30}}>
               {/* DETAILS */}

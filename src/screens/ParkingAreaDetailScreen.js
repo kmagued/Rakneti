@@ -23,6 +23,7 @@ import {
   updateLocations,
 } from '../store/actions/locations';
 import CarChoice from '../screens/CarChoice';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -72,214 +73,220 @@ class ParkingAreaDetailScreen extends React.Component {
       );
     }
 
+    const activeCar = this.props.user.cars.find((car) => car.active);
+
     return (
-      <View style={styles.screen}>
-        <Overlay
-          backdropStyle={{backgroundColor: 'transparent'}}
-          animationType="slide"
-          isVisible={this.state.visible}
-          overlayStyle={styles.overlay}
-          onBackdropPress={() =>
-            this.setState({visible: false, activeArea: {}, index: null})
-          }>
-          <>
-            <Overlay
-              isVisible={this.state.carOverlayVisible}
-              overlayStyle={{flex: 1, width: '100%'}}
-              animationType="slide">
-              <CarChoice
-                onClose={() => {
-                  this.setState({carOverlayVisible: false});
-                }}
-              />
-            </Overlay>
-            <View style={{flex: 1}}>
-              <View style={{flex: 0.2, justifyContent: 'center'}}>
-                <TextComp bold style={styles.title}>
-                  Reserve Spot
-                </TextComp>
-              </View>
-              <View
-                style={{
-                  flex: 0.5,
-                  paddingHorizontal: 20,
-                  justifyContent: 'space-around',
-                }}>
-                <View style={{marginBottom: 30}}>
-                  <TextComp black style={{fontSize: 24, marginBottom: 7}}>
-                    {this.state.activeArea.name}
-                  </TextComp>
-                  <TextComp
-                    bold
-                    style={{fontSize: 32, color: Colors.secondary}}>
-                    {this.state.activeArea.numberOfSpots -
-                      this.state.activeArea.availableSpots}
-                    <TextComp style={{color: 'grey', fontSize: 24}}>
-                      /{this.state.activeArea.numberOfSpots}
-                    </TextComp>
-                  </TextComp>
-                </View>
-                <TouchableHighlight
-                  onPress={() => {
-                    this.setState({carOverlayVisible: true});
+      <>
+        <FocusAwareStatusBar barStyle="light-content" />
+        <View style={styles.screen}>
+          <Overlay
+            backdropStyle={{backgroundColor: 'transparent'}}
+            animationType="slide"
+            isVisible={this.state.visible}
+            overlayStyle={styles.overlay}
+            onBackdropPress={() =>
+              this.setState({visible: false, activeArea: {}, index: null})
+            }>
+            <>
+              <Overlay
+                isVisible={this.state.carOverlayVisible}
+                overlayStyle={{flex: 1, width: '100%'}}
+                animationType="slide">
+                <CarChoice
+                  onClose={() => {
+                    this.setState({carOverlayVisible: false});
                   }}
-                  style={{paddingVertical: 10, borderRadius: 10}}
-                  underlayColor="whitesmoke">
-                  <View style={styles.row}>
-                    <TextComp black style={{fontSize: 16}}>
-                      Vehicle
-                    </TextComp>
-                    <TextComp style={{color: 'grey'}}>
-                      {this.props.user.carDetails.make}{' '}
-                      {this.props.user.carDetails.model}
-                    </TextComp>
-                  </View>
-                </TouchableHighlight>
-                <View>
-                  <View style={styles.row}>
-                    <TextComp black style={{fontSize: 16}}>
-                      License Plate
-                    </TextComp>
-                    <TextComp style={{color: 'grey'}}>
-                      {this.props.user.carDetails.licensePlate}
-                    </TextComp>
-                  </View>
+                />
+              </Overlay>
+              <View style={{flex: 1}}>
+                <View style={{flex: 0.2, justifyContent: 'center'}}>
+                  <TextComp bold style={styles.title}>
+                    Reserve Spot
+                  </TextComp>
                 </View>
-              </View>
-              <View
-                style={{
-                  flex: 0.3,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                {this.props.didReserve ||
-                this.state.activeArea.availableSpots == 0 ||
-                !this.props.nearby.find((loc) => loc.name === parking.name) ? (
-                  <View style={{padding: 10, width: '80%'}}>
-                    <TextComp
-                      bold
-                      style={{
-                        color: Colors.primaryColor,
-                        fontSize: 22,
-                        textAlign: 'center',
-                      }}>
-                      {this.props.didReserve
-                        ? 'Already Reserved'
-                        : !this.props.nearby.find(
-                            (loc) => loc.name === parking.name,
-                          )
-                        ? 'Out of Range'
-                        : 'Area is FULL'}
-                    </TextComp>
-                  </View>
-                ) : (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={styles.btn}
-                    onPress={() => {
-                      this.setState({visible: false});
-                      this.props
-                        .reserve(
-                          parking,
-                          this.state.activeArea,
-                          this.state.index,
-                          this.props.user.uid,
-                        )
-                        .then(() => {
-                          this.props.navigation.reset({
-                            index: 0,
-                            routes: [{name: 'HomeNav'}],
-                          });
-                          this.props.navigation.navigate('HomeNav', {
-                            screen: 'Reservation',
-                          });
-                        });
-                    }}>
-                    <TextComp bold style={{color: 'white', fontSize: 16}}>
-                      Reserve
-                    </TextComp>
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-          </>
-        </Overlay>
-        <ScrollView
-          overScrollMode="never"
-          contentContainerStyle={{flex: 1}}
-          bounces={false}>
-          <View style={styles.photo}>
-            <ImageBackground
-              source={{uri: parking.image}}
-              style={{width: '100%', height: '100%'}}>
-              <SafeAreaView
-                style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginHorizontal: 20,
+                    flex: 0.5,
+                    paddingHorizontal: 20,
+                    justifyContent: 'space-around',
                   }}>
-                  <TouchableOpacity
-                    onPress={() => this.props.navigation.goBack()}>
-                    <Ionicons name="ios-arrow-back" size={30} color="white" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => this.bookmarkHandler(parking)}
-                    style={{alignSelf: 'flex-end'}}>
-                    {this.bookmarked ? (
-                      <FontAwesome name="heart" size={24} color="white" />
-                    ) : (
-                      <Feather name="heart" size={25} color="white" />
-                    )}
-                  </TouchableOpacity>
-                </View>
-              </SafeAreaView>
-            </ImageBackground>
-          </View>
-          <View style={{padding: 20}}>
-            <View style={{width: '95%'}}>
-              <TextComp black style={{fontSize: 20, marginBottom: 10}}>
-                {parking.name}
-              </TextComp>
-              <TextComp>{parking.address}</TextComp>
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexWrap: 'wrap',
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 10,
-            }}>
-            {Object.values(parking.parkingAreas).map((area, index) => (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.8}
-                underlayColor="rgba(255,255,255,0.2)"
-                style={{
-                  ...styles.areaContainer,
-                  backgroundColor: 'whitesmoke',
-                }}
-                onPress={() => {
-                  this.setState({visible: true, activeArea: area, index});
-                }}>
-                <TextComp style={styles.areaNameText}>{area.name}</TextComp>
-                <View>
-                  <TextComp bold style={{fontSize: 22, color: 'grey'}}>
-                    {area.numberOfSpots - area.availableSpots}
-                    <TextComp style={{fontSize: 14}}>
-                      /{area.numberOfSpots}
+                  <View style={{marginBottom: 30}}>
+                    <TextComp black style={{fontSize: 24, marginBottom: 7}}>
+                      {this.state.activeArea.name}
                     </TextComp>
-                  </TextComp>
+                    <TextComp
+                      bold
+                      style={{fontSize: 32, color: Colors.secondary}}>
+                      {this.state.activeArea.numberOfSpots -
+                        this.state.activeArea.availableSpots}
+                      <TextComp style={{color: 'grey', fontSize: 24}}>
+                        /{this.state.activeArea.numberOfSpots}
+                      </TextComp>
+                    </TextComp>
+                  </View>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.setState({carOverlayVisible: true});
+                    }}
+                    style={{paddingVertical: 10, borderRadius: 10}}
+                    underlayColor="whitesmoke">
+                    <View style={styles.row}>
+                      <TextComp black style={{fontSize: 16}}>
+                        Vehicle
+                      </TextComp>
+                      <TextComp style={{color: 'grey'}}>
+                        {activeCar.make} {activeCar.model}
+                      </TextComp>
+                    </View>
+                  </TouchableHighlight>
+                  <View>
+                    <View style={styles.row}>
+                      <TextComp black style={{fontSize: 16}}>
+                        License Plate
+                      </TextComp>
+                      <TextComp style={{color: 'grey'}}>
+                        {activeCar.licensePlate}
+                      </TextComp>
+                    </View>
+                  </View>
                 </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
+                <View
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  {this.props.didReserve ||
+                  this.state.activeArea.availableSpots == 0 ||
+                  !this.props.nearby.find(
+                    (loc) => loc.name === parking.name,
+                  ) ? (
+                    <View style={{padding: 10, width: '80%'}}>
+                      <TextComp
+                        bold
+                        style={{
+                          color: Colors.primaryColor,
+                          fontSize: 22,
+                          textAlign: 'center',
+                        }}>
+                        {this.props.didReserve
+                          ? 'Already Reserved'
+                          : !this.props.nearby.find(
+                              (loc) => loc.name === parking.name,
+                            )
+                          ? 'Out of Range'
+                          : 'Area is FULL'}
+                      </TextComp>
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.btn}
+                      onPress={() => {
+                        this.setState({visible: false});
+                        this.props
+                          .reserve(
+                            parking,
+                            this.state.activeArea,
+                            this.state.index,
+                            this.props.user.uid,
+                          )
+                          .then(() => {
+                            this.props.navigation.reset({
+                              index: 0,
+                              routes: [{name: 'HomeNav'}],
+                            });
+                            this.props.navigation.navigate('HomeNav', {
+                              screen: 'Reservation',
+                            });
+                          });
+                      }}>
+                      <TextComp bold style={{color: 'white', fontSize: 16}}>
+                        Reserve
+                      </TextComp>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            </>
+          </Overlay>
+          <ScrollView
+            overScrollMode="never"
+            contentContainerStyle={{flex: 1}}
+            bounces={false}>
+            <View style={styles.photo}>
+              <ImageBackground
+                source={{uri: parking.image}}
+                style={{width: '100%', height: '100%'}}>
+                <SafeAreaView
+                  style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginHorizontal: 20,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => this.props.navigation.goBack()}>
+                      <Ionicons name="ios-arrow-back" size={30} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => this.bookmarkHandler(parking)}
+                      style={{alignSelf: 'flex-end'}}>
+                      {this.bookmarked ? (
+                        <FontAwesome name="heart" size={24} color="white" />
+                      ) : (
+                        <Feather name="heart" size={25} color="white" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </SafeAreaView>
+              </ImageBackground>
+            </View>
+            <View style={{padding: 20}}>
+              <View style={{width: '95%'}}>
+                <TextComp black style={{fontSize: 20, marginBottom: 10}}>
+                  {parking.name}
+                </TextComp>
+                <TextComp>{parking.address}</TextComp>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexWrap: 'wrap',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginHorizontal: 10,
+              }}>
+              {Object.values(parking.parkingAreas).map((area, index) => (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.8}
+                  underlayColor="rgba(255,255,255,0.2)"
+                  style={{
+                    ...styles.areaContainer,
+                    backgroundColor: 'whitesmoke',
+                  }}
+                  onPress={() => {
+                    this.setState({visible: true, activeArea: area, index});
+                  }}>
+                  <TextComp style={styles.areaNameText}>{area.name}</TextComp>
+                  <View>
+                    <TextComp bold style={{fontSize: 22, color: 'grey'}}>
+                      {area.numberOfSpots - area.availableSpots}
+                      <TextComp style={{fontSize: 14}}>
+                        /{area.numberOfSpots}
+                      </TextComp>
+                    </TextComp>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
+        </View>
+      </>
     );
   }
 }
@@ -329,7 +336,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     width: '100%',
-    height: SCREEN_HEIGHT / 2.2,
+    height: 350,
     position: 'absolute',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

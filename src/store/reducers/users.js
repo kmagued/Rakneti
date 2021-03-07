@@ -6,6 +6,8 @@ import {
   LOCAL_SIGNIN,
   OPEN_CAR_SCREEN,
   CANCEL_CAR_CHOICE,
+  ADD_CAR,
+  CHANGE_CAR,
 } from '../actions/users';
 import {
   SET_BOOKMARKED_LOCATIONS,
@@ -24,7 +26,6 @@ const initialState = {
   reservedPlace: null,
   reservedArea: null,
   reservationDate: null,
-  car: null,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -40,16 +41,21 @@ const usersReducer = (state = initialState, action) => {
         user: {
           ...action.user,
           uid: action.token,
-          bookmarkedLocations: action.user.bookmarkedLocations
-            ? action.user.bookmarkedLocations
-            : {},
+          bookmarkedLocations: action.user.bookmarkedLocations,
+          cars: Object.values(action.user.cars),
         },
       };
     }
     case LOCAL_SIGNIN: {
       return {
         token: action.user.uid,
-        user: action.user,
+        user: {
+          ...action.user,
+          cars: Object.values(action.user.cars),
+          bookmarkedLocations: action.user.bookmarkedLocations
+            ? action.user.bookmarkedLocations
+            : [],
+        },
       };
     }
     case ERROR: {
@@ -130,6 +136,33 @@ const usersReducer = (state = initialState, action) => {
       return {
         ...state,
         car: false,
+      };
+    }
+    case ADD_CAR: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          cars: [...state.user.cars, action.car],
+        },
+      };
+    }
+    case CHANGE_CAR: {
+      const id = state.user.cars.findIndex(
+        (car) => car.licensePlate === action.car.licensePlate,
+      );
+
+      const activeId = state.user.cars.findIndex((car) => car.active);
+
+      state.user.cars[id].active = true;
+      state.user.cars[activeId].active = false;
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          cars: state.user.cars,
+        },
       };
     }
     default:

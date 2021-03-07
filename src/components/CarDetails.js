@@ -1,39 +1,41 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import TextComp from './TextComp';
 import Colors from '../constants/Colors';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const CarDetails = (props) => (
-  <TouchableOpacity
+  <TouchableHighlight
+    underlayColor="rgba(248,248,248, 0.5)"
     style={{...styles.container, ...styles.row}}
-    activeOpacity={1}
-    onPress={() => props.onChoose}>
-    <View style={styles.row}>
-      <View>
-        <FontAwesome5 name="car-alt" size={60} color="#ccc" />
-        <View
-          style={{
-            ...styles.carColor,
-            backgroundColor: props.car.color.toLowerCase(),
-          }}
-        />
+    onPress={props.onChoose}>
+    <>
+      <View style={styles.row}>
+        <View>
+          <FontAwesome5 name="car-alt" size={60} color="#ccc" />
+          <View
+            style={{
+              ...styles.carColor,
+              backgroundColor: props.car.color.toLowerCase(),
+            }}
+          />
+        </View>
+        <View style={{marginLeft: 20}}>
+          <TextComp bold style={{fontSize: 18, color: Colors.secondary}}>
+            {props.car.make} {props.car.model}
+          </TextComp>
+          <TextComp style={{fontSize: 20, color: 'dimgrey', textAlign: 'left'}}>
+            {props.car.licensePlate}
+          </TextComp>
+        </View>
       </View>
-      <View style={{marginLeft: 20}}>
-        <TextComp bold style={{fontSize: 18, color: Colors.secondary}}>
-          {props.car.make} {props.car.model}
-        </TextComp>
-        <TextComp style={{fontSize: 20, color: 'dimgrey', textAlign: 'left'}}>
-          {props.car.licensePlate}
-        </TextComp>
-      </View>
-    </View>
-    {props.current && (
-      <View>
-        <FontAwesome5 name="check" size={20} color={Colors.primaryColor} />
-      </View>
-    )}
-  </TouchableOpacity>
+      {props.current && (
+        <View>
+          <FontAwesome5 name="check" size={20} color={Colors.primaryColor} />
+        </View>
+      )}
+    </>
+  </TouchableHighlight>
 );
 
 const styles = StyleSheet.create({
@@ -45,6 +47,8 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
     paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 10,
   },
   carColor: {
     width: 35,

@@ -13,7 +13,7 @@ import TextComp from '../components/TextComp';
 import Header from '../components/Header';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
-import {StatusBar} from 'react-native';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -49,7 +49,7 @@ class ParkingAreas extends React.Component {
   render() {
     return (
       <>
-        <StatusBar barStyle="dark-content" />
+        <FocusAwareStatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.screen}>
           <Header
             centerComponent={

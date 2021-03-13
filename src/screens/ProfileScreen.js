@@ -5,17 +5,18 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
-  Image,
-  FlatList,
+  Dimensions,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 
 //Components & Constants
 import Header from '../components/Header';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
-import CarDetails from '../components/CarDetails';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
+import CarChoice from '../screens/CarChoice';
+import {Overlay} from 'react-native-elements';
 
 //Redux
 import {connect} from 'react-redux';
@@ -24,42 +25,13 @@ import {logout} from '../store/actions/users';
 //Icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
+import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
+import CarDetails from '../components/CarDetails';
 class ProfileScreen extends React.Component {
-  renderHistory = (itemData) =>
-    itemData.index < 2 && (
-      <TouchableOpacity
-        style={styles.placeContainer}
-        activeOpacity={0.8}
-        onPress={() =>
-          this.props.navigation.navigate('HistoryDetail', {
-            itemDetail: itemData.item,
-          })
-        }>
-        <View style={styles.photo}>
-          <Image
-            source={{
-              uri: itemData.item.image,
-            }}
-            style={{width: '100%', height: '100%'}}
-          />
-        </View>
-        <View
-          style={{
-            backgroundColor: 'whitesmoke',
-            padding: 10,
-          }}>
-          <TextComp
-            bold
-            numberOfLines={1}
-            style={{fontSize: 16}}
-            ellipsizeMode="tail">
-            {itemData.item.name}
-          </TextComp>
-          <TextComp>{itemData.item.date}</TextComp>
-        </View>
-      </TouchableOpacity>
-    );
+  state = {
+    visible: false,
+  };
 
   renderEmpty = () => (
     <View
@@ -105,56 +77,227 @@ class ProfileScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={styles.screen}>
-          <FocusAwareStatusBar barStyle="dark-content" />
-          <ScrollView>
-            <Header
-              rightComponent={
-                <TouchableOpacity
-                  onPress={() => {
-                    Alert.alert('Logout', 'Are you sure you want to logout?', [
-                      {text: 'Cancel', style: 'cancel'},
-                      {
-                        text: 'Log Out',
-                        style: 'destructive',
-                        onPress: () => {
-                          this.props.logout();
-                        },
-                      },
-                    ]);
-                  }}>
-                  <MaterialIcons
-                    name="logout"
-                    size={23}
-                    color={Colors.secondary}
-                  />
-                </TouchableOpacity>
-              }
-            />
-            <View style={styles.container}>
-              <View style={{alignItems: 'center'}}>
-                <View style={styles.circle}>
-                  <TextComp style={{fontSize: 50, color: 'white'}}>
-                    {this.props.user.fullName.charAt(0).toUpperCase()}
-                  </TextComp>
+        <FocusAwareStatusBar barStyle="light-content" />
+
+        <Overlay
+          isVisible={this.state.visible}
+          animationType="slide"
+          overlayStyle={{height: '100%', width: '100%'}}>
+          <CarChoice
+            onClose={() => {
+              this.setState({visible: false});
+            }}
+          />
+        </Overlay>
+        <ScrollView style={styles.screen} bounces={false}>
+          <View style={{height: Dimensions.get('window').height / 2.5}}>
+            <ImageBackground
+              style={{height: '100%', width: '100%'}}
+              source={{
+                uri:
+                  'https://c0.wallpaperflare.com/preview/300/236/845/sunset-sun-gradient-red.jpg',
+              }}>
+              <SafeAreaView
+                style={{backgroundColor: 'rgba(0,0,0,0.3)', height: '100%'}}>
+                <Header
+                  rightComponent={
+                    <TouchableOpacity
+                      onPress={() => {
+                        Alert.alert(
+                          'Logout',
+                          'Are you sure you want to logout?',
+                          [
+                            {text: 'Cancel', style: 'cancel'},
+                            {
+                              text: 'Log Out',
+                              style: 'destructive',
+                              onPress: () => {
+                                this.props.logout();
+                              },
+                            },
+                          ],
+                        );
+                      }}>
+                      <MaterialIcons name="logout" size={23} color="white" />
+                    </TouchableOpacity>
+                  }
+                />
+                <View style={{marginBottom: 20}}>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={styles.circle}>
+                      <TextComp style={{fontSize: 50, color: '#b6b6b6'}}>
+                        {this.props.user.fullName.charAt(0).toUpperCase()}
+                      </TextComp>
+                    </View>
+                    <TextComp black style={{fontSize: 30, color: 'white'}}>
+                      {this.props.user.fullName}
+                    </TextComp>
+                    <TextComp
+                      style={{
+                        color: 'white',
+                        fontSize: 15,
+                        marginTop: 3,
+                      }}>
+                      {this.props.user.email}
+                    </TextComp>
+                  </View>
                 </View>
-                <TextComp black style={{fontSize: 35, color: Colors.secondary}}>
-                  {this.props.user.fullName}
-                </TextComp>
-                <TextComp
-                  style={{color: Colors.secondary, fontSize: 16, marginTop: 3}}>
-                  {this.props.user.email}
-                </TextComp>
-              </View>
+              </SafeAreaView>
+            </ImageBackground>
+          </View>
+          <>
+            <View
+              style={{
+                ...styles.box,
+                marginTop: -30,
+                marginBottom: 20,
+              }}>
+              <TouchableOpacity
+                style={{...styles.btn, paddingVertical: 0}}
+                activeOpacity={0.7}
+                onPress={() => this.setState({visible: true})}>
+                <CarDetails
+                  profile
+                  car={this.props.user.cars.find((car) => car.active)}
+                  onChoose={() => this.setState({visible: true})}
+                />
+              </TouchableOpacity>
             </View>
-            <View style={{paddingHorizontal: 30}}>
-              <CarDetails
-                car={this.props.user.cars.find((car) => car.active)}
-              />
+
+            <View
+              style={{
+                ...styles.box,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}>
+                <View style={styles.row}>
+                  <MaterialIcons
+                    name="notifications"
+                    size={25}
+                    color="#b6b6b6"
+                  />
+                  <TextComp style={styles.text}>Notifications</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+              <View style={styles.line} />
             </View>
-            <View style={styles.container}></View>
-          </ScrollView>
-        </SafeAreaView>
+            <View
+              style={{
+                ...styles.box,
+                borderRadius: 0,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}
+                onPress={() => this.props.navigation.navigate('History')}>
+                <View style={styles.row}>
+                  <MaterialIcons name="history" size={25} color="#b6b6b6" />
+                  <TextComp style={styles.text}>Parking History</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+              <View style={styles.line} />
+            </View>
+            <View
+              style={{
+                ...styles.box,
+                borderRadius: 0,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}
+                onPress={() => this.props.navigation.navigate('Report')}>
+                <View style={styles.row}>
+                  <MaterialIcons
+                    name="report-problem"
+                    size={25}
+                    color="#b6b6b6"
+                  />
+                  <TextComp style={styles.text}>Report</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+              <View style={styles.line} />
+            </View>
+            <View
+              style={{
+                ...styles.box,
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0,
+                marginBottom: 20,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}>
+                <View style={styles.row}>
+                  <Feather name="help-circle" size={25} color="#b6b6b6" />
+                  <TextComp style={styles.text}>Help</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                ...styles.box,
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}>
+                <View style={styles.row}>
+                  <MaterialIcons name="lock" size={25} color="#b6b6b6" />
+                  <TextComp style={styles.text}>Privacy Policy</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+              <View style={styles.line} />
+            </View>
+            <View
+              style={{
+                ...styles.box,
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0,
+                marginBottom: 20,
+              }}>
+              <TouchableOpacity
+                style={{
+                  ...styles.row,
+                  ...styles.btn,
+                }}
+                activeOpacity={0.7}>
+                <View style={styles.row}>
+                  <Feather name="file-text" size={25} color="#b6b6b6" />
+                  <TextComp style={styles.text}>Terms of Service</TextComp>
+                </View>
+                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+              </TouchableOpacity>
+            </View>
+          </>
+          <View style={{alignItems: 'center', marginBottom: 20}}>
+            <TextComp style={{color: '#b6b7b7'}}>Rakneti v1.0.0</TextComp>
+          </View>
+        </ScrollView>
       </>
     );
   }
@@ -163,7 +306,6 @@ class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: 'white',
   },
   screenTitleContainer: {
     padding: 15,
@@ -173,35 +315,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-  container: {
-    borderRadius: 10,
-    marginHorizontal: 10,
+  text: {
+    fontSize: 18,
+    padding: 10,
+    marginLeft: 10,
+    color: Colors.secondary,
+  },
+  btn: {
+    width: '85%',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 15,
-    paddingHorizontal: 20,
   },
   circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: Colors.secondary,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 7,
+    marginBottom: 15,
   },
-  placeContainer: {
-    width: 170,
+  box: {
+    width: '90%',
+    backgroundColor: 'white',
+    alignSelf: 'center',
     borderRadius: 10,
-    overflow: 'hidden',
-    marginRight: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
-  photo: {
-    height: 120,
-  },
-  slash: {
-    width: 85,
-    borderWidth: 5,
-    transform: [{rotate: '-45deg'}],
-    position: 'absolute',
+  line: {
+    borderBottomWidth: 0.5,
+    borderColor: '#e6e6e6',
+    width: '87%',
+    alignSelf: 'center',
   },
 });
 

@@ -3,16 +3,17 @@ import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import TextComp from './TextComp';
 import Colors from '../constants/Colors';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const CarDetails = (props) => (
   <TouchableHighlight
-    underlayColor="rgba(248,248,248, 0.5)"
+    underlayColor={props.profile ? null : 'rgba(248,248,248, 0.7)'}
     style={{...styles.container, ...styles.row}}
     onPress={props.onChoose}>
     <>
       <View style={styles.row}>
         <View>
-          <FontAwesome5 name="car-alt" size={60} color="#ccc" />
+          <FontAwesome5 name="car-alt" size={50} color="#ccc" />
           <View
             style={{
               ...styles.carColor,
@@ -34,6 +35,11 @@ const CarDetails = (props) => (
           <FontAwesome5 name="check" size={20} color={Colors.primaryColor} />
         </View>
       )}
+      {props.profile && (
+        <View>
+          <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
+        </View>
+      )}
     </>
   </TouchableHighlight>
 );
@@ -47,16 +53,15 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 5,
     paddingVertical: 15,
-    paddingHorizontal: 10,
     borderRadius: 10,
   },
   carColor: {
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     position: 'absolute',
-    marginLeft: 30,
-    marginTop: 25,
+    marginLeft: 25,
+    marginTop: 20,
   },
 });
 

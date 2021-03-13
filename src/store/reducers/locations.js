@@ -19,11 +19,12 @@ const initialState = {
 
 const locationsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_LOCATIONS:
+    case SET_LOCATIONS: {
       return {
         ...state,
         locations: Object.values(action.locations),
       };
+    }
     case ADD_TO_BOOKMARKED:
       return {
         ...state,

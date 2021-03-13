@@ -12,6 +12,7 @@ import TextComp from '../components/TextComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import {connect} from 'react-redux';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 class SearchScreen extends React.Component {
   state = {
@@ -35,6 +36,7 @@ class SearchScreen extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.screen}>
+        <FocusAwareStatusBar barStyle="dark-content" />
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
           <View

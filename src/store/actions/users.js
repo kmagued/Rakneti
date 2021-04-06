@@ -79,7 +79,14 @@ export const verifyEmail = (email) => async () => {
     });
 };
 
-export const forgotPassword = () => async () => {};
+export const forgotPassword = (email) => async () => {
+  firebase
+    .auth()
+    .forgotPassword(email)
+    .then(() => {
+      console.log("Recovery email sent!")
+    });
+};
 
 export const logout = () => async (dispatch) => {
   AsyncStorage.removeItem('user');

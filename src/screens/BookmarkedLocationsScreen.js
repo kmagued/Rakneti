@@ -1,17 +1,12 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  StatusBar,
-} from 'react-native';
+import {View, StyleSheet, SafeAreaView, FlatList} from 'react-native';
 import TextComp from '../components/TextComp';
 import Colors from '../constants/Colors';
 import {connect} from 'react-redux';
 import {removeFromBookmarkedLocations} from '../store/actions/locations';
 import Location from '../components/Location';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 
 class BookmarkedLocationsScreen extends React.Component {
   renderEmpty = () => (
@@ -26,7 +21,7 @@ class BookmarkedLocationsScreen extends React.Component {
           fontSize: 18,
           alignSelf: 'center',
           color: Colors.secondary,
-          marginTop: 10,
+          marginTop: 15,
         }}>
         Your favorites will show up here
       </TextComp>
@@ -51,16 +46,19 @@ class BookmarkedLocationsScreen extends React.Component {
   render() {
     return (
       <>
-        <StatusBar barStyle="light-content" />
-        <SafeAreaView style={{backgroundColor: Colors.secondary}} />
+        <FocusAwareStatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.screen}>
           <View style={styles.headerContainer}>
-            <TextComp style={{color: 'white', fontSize: 20}}>
+            <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
               Favorites
             </TextComp>
           </View>
           <FlatList
-            contentContainerStyle={{flex: 1}}
+            contentContainerStyle={{
+              flex: Object.values(this.props.user.bookmarkedLocations)
+                ? 1
+                : null,
+            }}
             ListEmptyComponent={this.renderEmpty}
             showsVerticalScrollIndicator={false}
             data={Object.values(this.props.user.bookmarkedLocations)}
@@ -81,7 +79,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     padding: 15,
     alignItems: 'center',
-    backgroundColor: Colors.secondary,
     marginBottom: 10,
   },
   titleContainer: {

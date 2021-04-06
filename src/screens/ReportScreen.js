@@ -10,6 +10,7 @@ import {
 import TextComp from '../components/TextComp';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 class ReportScreen extends React.Component {
   state = {
     title: '',
@@ -19,37 +20,33 @@ class ReportScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={{backgroundColor: Colors.primaryColor}} />
         <SafeAreaView style={styles.screen}>
           <View
             style={{
-              backgroundColor: Colors.primaryColor,
-              paddingBottom: 30,
+              paddingBottom: 20,
               height: '25%',
               justifyContent: 'space-around',
-              borderBottomRightRadius: Platform.OS === 'ios' ? 10 : 0,
-              borderBottomLeftRadius: Platform.OS === 'ios' ? 10 : 0,
             }}>
             <TouchableOpacity
               style={{marginLeft: 20}}
               onPress={() => this.props.navigation.goBack()}>
-              <Ionicons name="ios-arrow-back" color="white" size={30} />
+              <Ionicons name="ios-arrow-back" size={30} />
             </TouchableOpacity>
             <View>
               <View style={styles.container}>
                 <TextComp black style={styles.title}>
-                  Report a Problem
+                  Report
                 </TextComp>
               </View>
               <View style={{paddingHorizontal: 30}}>
-                <TextComp style={{fontSize: 16, color: 'white'}}>
+                <TextComp style={{fontSize: 16}}>
                   Send your report, we will get contact with you as soon as
                   possible
                 </TextComp>
               </View>
             </View>
           </View>
-          <View style={{marginVertical: 30}}>
+          <View style={{marginVertical: 10, height: '60%'}}>
             <View style={styles.input}>
               <TextInput
                 style={styles.inputText}
@@ -58,22 +55,23 @@ class ReportScreen extends React.Component {
                 onChangeText={(title) => this.setState({title})}
               />
             </View>
-            <View style={{height: 300, ...styles.input}}>
+            <TouchableWithoutFeedback
+              style={{height: 300, paddingTop: 10, ...styles.input}}
+              onPress={() => this.input.focus()}>
               <TextInput
-                style={{...styles.inputText, lineHeight: 22}}
+                ref={(ref) => (this.input = ref)}
+                style={{...styles.inputText, lineHeight: 25}}
                 placeholder="What do you want to report?"
                 value={this.state.content}
                 onChangeText={(content) => this.setState({content})}
                 blurOnSubmit
                 multiline
               />
-            </View>
+            </TouchableWithoutFeedback>
           </View>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => {
-              this.props.navigation.goBack();
-            }}>
+            onPress={() => this.props.navigation.goBack()}>
             <TextComp style={styles.btnText}>Send</TextComp>
           </TouchableOpacity>
         </SafeAreaView>
@@ -93,16 +91,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 26,
-    color: 'white',
   },
   input: {
     width: '90%',
     alignSelf: 'center',
     borderRadius: 10,
-    marginBottom: 20,
-    backgroundColor: 'rgb(248, 249, 253)',
-    borderWidth: 0.5,
-    borderColor: 'grey',
+    marginBottom: 15,
+    backgroundColor: 'whitesmoke',
   },
   inputText: {
     fontFamily: 'Ubuntu-Regular',

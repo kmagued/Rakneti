@@ -41,8 +41,11 @@ const usersReducer = (state = initialState, action) => {
         user: {
           ...action.user,
           uid: action.token,
-          bookmarkedLocations: action.user.bookmarkedLocations,
+          bookmarkedLocations: action.user.bookmarkedLocations
+            ? action.user.bookmarkedLocations
+            : [],
           cars: Object.values(action.user.cars),
+          history: action.user.history ? action.user.history : [],
         },
       };
     }
@@ -55,6 +58,7 @@ const usersReducer = (state = initialState, action) => {
           bookmarkedLocations: action.user.bookmarkedLocations
             ? action.user.bookmarkedLocations
             : [],
+          history: action.user.history ? action.user.history : [],
         },
       };
     }

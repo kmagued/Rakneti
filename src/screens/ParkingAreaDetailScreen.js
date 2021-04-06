@@ -107,10 +107,10 @@ class ParkingAreaDetailScreen extends React.Component {
                 <View
                   style={{
                     flex: 0.5,
-                    paddingHorizontal: 20,
+                    paddingHorizontal: 50,
                     justifyContent: 'space-around',
                   }}>
-                  <View style={{marginBottom: 30}}>
+                  <View style={{marginBottom: 30, alignItems: 'center'}}>
                     <TextComp black style={{fontSize: 24, marginBottom: 7}}>
                       {this.state.activeArea.name}
                     </TextComp>
@@ -300,6 +300,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginBottom: 10,
+    color: Colors.primaryColor,
   },
   carOverlay: {
     height: '100%',

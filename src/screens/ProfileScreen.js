@@ -17,6 +17,7 @@ import Colors from '../constants/Colors';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
 import CarChoice from '../screens/CarChoice';
 import {Overlay} from 'react-native-elements';
+import Box from '../components/Box';
 
 //Redux
 import {connect} from 'react-redux';
@@ -24,55 +25,11 @@ import {logout} from '../store/actions/users';
 
 //Icons
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Entypo from 'react-native-vector-icons/Entypo';
-import Feather from 'react-native-vector-icons/Feather';
 import CarDetails from '../components/CarDetails';
 class ProfileScreen extends React.Component {
   state = {
     visible: false,
   };
-
-  renderEmpty = () => (
-    <View
-      style={{
-        alignItems: 'center',
-        paddingVertical: 30,
-        borderRadius: 15,
-      }}>
-      <>
-        <FontAwesome5 name="history" size={70} color={Colors.primaryColor} />
-        <View
-          style={{
-            ...styles.slash,
-            borderColor: 'white',
-            marginTop: 52,
-            borderWidth: 3,
-            width: 100,
-          }}
-        />
-        <View
-          style={{
-            ...styles.slash,
-            borderColor: Colors.primaryColor,
-            marginTop: 60,
-          }}
-        />
-        <View
-          style={{
-            ...styles.slash,
-            borderColor: 'white',
-            marginTop: 68,
-            borderWidth: 3,
-            width: 100,
-          }}
-        />
-      </>
-      <TextComp style={{fontSize: 16, marginTop: 10}}>
-        Your parking history will appear here
-      </TextComp>
-    </View>
-  );
 
   render() {
     return (
@@ -94,11 +51,10 @@ class ProfileScreen extends React.Component {
             <ImageBackground
               style={{height: '100%', width: '100%'}}
               source={{
-                uri:
-                  'https://c0.wallpaperflare.com/preview/300/236/845/sunset-sun-gradient-red.jpg',
+                uri: 'https://wallpapercave.com/wp/wp4465062.jpg',
               }}>
               <SafeAreaView
-                style={{backgroundColor: 'rgba(0,0,0,0.3)', height: '100%'}}>
+                style={{backgroundColor: 'rgba(0,0,0,0.1)', height: '100%'}}>
                 <Header
                   rightComponent={
                     <TouchableOpacity
@@ -125,7 +81,7 @@ class ProfileScreen extends React.Component {
                 <View style={{marginBottom: 20}}>
                   <View style={{alignItems: 'center'}}>
                     <View style={styles.circle}>
-                      <TextComp style={{fontSize: 50, color: '#b6b6b6'}}>
+                      <TextComp style={{fontSize: 50, color: 'grey'}}>
                         {this.props.user.fullName.charAt(0).toUpperCase()}
                       </TextComp>
                     </View>
@@ -146,153 +102,58 @@ class ProfileScreen extends React.Component {
             </ImageBackground>
           </View>
           <>
-            <View
+            <TouchableOpacity
               style={{
                 ...styles.box,
-                marginTop: -30,
+                marginTop: Dimensions.get('window').height < 800 ? -30 : -40,
                 marginBottom: 20,
-              }}>
-              <TouchableOpacity
-                style={{...styles.btn, paddingVertical: 0}}
-                activeOpacity={0.7}
-                onPress={() => this.setState({visible: true})}>
+              }}
+              activeOpacity={0.7}
+              onPress={() => this.setState({visible: true})}>
+              <View style={{...styles.btn, paddingVertical: 0}}>
                 <CarDetails
                   profile
                   car={this.props.user.cars.find((car) => car.active)}
                   onChoose={() => this.setState({visible: true})}
                 />
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
+            <Box
+              top
+              iconName="history"
+              iconType="material-icons"
+              title="Parking History"
+              onPress={() => this.props.navigation.navigate('History')}
+            />
+            <Box
+              end
+              iconName="report-problem"
+              iconType="material-icons"
+              title="Report"
+              onPress={() => this.props.navigation.navigate('Report')}
+            />
 
-            <View
-              style={{
-                ...styles.box,
-                borderBottomRightRadius: 0,
-                borderBottomLeftRadius: 0,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}>
-                <View style={styles.row}>
-                  <MaterialIcons
-                    name="notifications"
-                    size={25}
-                    color="#b6b6b6"
-                  />
-                  <TextComp style={styles.text}>Notifications</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </View>
-            <View
-              style={{
-                ...styles.box,
-                borderRadius: 0,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}
-                onPress={() => this.props.navigation.navigate('History')}>
-                <View style={styles.row}>
-                  <MaterialIcons name="history" size={25} color="#b6b6b6" />
-                  <TextComp style={styles.text}>Parking History</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </View>
-            <View
-              style={{
-                ...styles.box,
-                borderRadius: 0,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}
-                onPress={() => this.props.navigation.navigate('Report')}>
-                <View style={styles.row}>
-                  <MaterialIcons
-                    name="report-problem"
-                    size={25}
-                    color="#b6b6b6"
-                  />
-                  <TextComp style={styles.text}>Report</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </View>
-            <View
-              style={{
-                ...styles.box,
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-                marginBottom: 20,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}>
-                <View style={styles.row}>
-                  <Feather name="help-circle" size={25} color="#b6b6b6" />
-                  <TextComp style={styles.text}>Help</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                ...styles.box,
-                borderBottomRightRadius: 0,
-                borderBottomLeftRadius: 0,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}>
-                <View style={styles.row}>
-                  <MaterialIcons name="lock" size={25} color="#b6b6b6" />
-                  <TextComp style={styles.text}>Privacy Policy</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </View>
-            <View
-              style={{
-                ...styles.box,
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-                marginBottom: 20,
-              }}>
-              <TouchableOpacity
-                style={{
-                  ...styles.row,
-                  ...styles.btn,
-                }}
-                activeOpacity={0.7}>
-                <View style={styles.row}>
-                  <Feather name="file-text" size={25} color="#b6b6b6" />
-                  <TextComp style={styles.text}>Terms of Service</TextComp>
-                </View>
-                <Entypo name="chevron-small-right" size={25} color="#b6b6b6" />
-              </TouchableOpacity>
-            </View>
+            <Box
+              top
+              iconName="lock"
+              iconType="material-icons"
+              title="Privacy Policy"
+              onPress={() => {}}
+            />
+            <Box
+              mid
+              iconName="file-text"
+              iconType="feather"
+              title="Terms of Service"
+              onPress={() => {}}
+            />
+            <Box
+              end
+              iconName="help-circle"
+              iconType="feather"
+              title="Help"
+              onPress={() => {}}
+            />
           </>
           <View style={{alignItems: 'center', marginBottom: 20}}>
             <TextComp style={{color: '#b6b7b7'}}>Rakneti v1.0.0</TextComp>
@@ -337,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   box: {
-    width: '90%',
+    width: '85%',
     backgroundColor: 'white',
     alignSelf: 'center',
     borderRadius: 10,

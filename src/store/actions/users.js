@@ -54,6 +54,7 @@ export const signup = (uid, email, fullName, mobile, carDetails) => async (
     mobile,
     cars: {0: {...carDetails, active: true}},
     bookmarkedLocations: {},
+    history: {},
   };
   firebase
     .database()
@@ -68,6 +69,17 @@ export const signup = (uid, email, fullName, mobile, carDetails) => async (
       await AsyncStorage.setItem('user', JSON.stringify({...userInfo, uid}));
     });
 };
+
+export const verifyEmail = (email) => async () => {
+  firebase
+    .auth()
+    .sendSignInLinkToEmail(email)
+    .then(() => {
+      console.log('Verification email sent!');
+    });
+};
+
+export const forgotPassword = () => async () => {};
 
 export const logout = () => async (dispatch) => {
   AsyncStorage.removeItem('user');

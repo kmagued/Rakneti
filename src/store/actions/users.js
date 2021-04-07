@@ -71,21 +71,29 @@ export const signup = (uid, email, fullName, mobile, carDetails) => async (
 };
 
 export const verifyEmail = (email) => async () => {
+  var actionCodeSettings = {
+    url: 'http://rakneti.firebaseapp.com',
+    handleCodeInApp: true,
+    iOS: {
+      bundleId: 'com.rakneti',
+    },
+    android: {
+      packageName: 'com.rakna',
+      installApp: true,
+      minimumVersion: '12',
+    },
+  };
+
   firebase
     .auth()
-    .sendSignInLinkToEmail(email)
+    .sendSignInLinkToEmail(email, actionCodeSettings)
     .then(() => {
       console.log('Verification email sent!');
     });
 };
 
 export const forgotPassword = (email) => async () => {
-  firebase
-    .auth()
-    .forgotPassword(email)
-    .then(() => {
-      console.log("Recovery email sent!")
-    });
+  firebase.auth().sendPasswordResetEmail(email);
 };
 
 export const logout = () => async (dispatch) => {

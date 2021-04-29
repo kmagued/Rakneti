@@ -8,7 +8,6 @@ import {
   CANCEL_CAR_CHOICE,
   ADD_CAR,
   CHANGE_CAR,
-  CAR_ERROR,
 } from '../actions/users';
 import {
   SET_BOOKMARKED_LOCATIONS,
@@ -17,7 +16,6 @@ import {
   CANCEL,
   DID_RESERVE,
 } from '../actions/locations';
-import moment from 'moment';
 
 const initialState = {
   user: null,
@@ -28,7 +26,6 @@ const initialState = {
   reservedPlace: null,
   reservedArea: null,
   reservationDate: null,
-  carErrors: {make: null, model: null, color: null, licensePlate: null},
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -39,7 +36,6 @@ const usersReducer = (state = initialState, action) => {
       };
     case AUTHENTICATE: {
       return {
-        carErrors: null,
         token: action.token,
         didTryAL: true,
         user: {
@@ -149,7 +145,6 @@ const usersReducer = (state = initialState, action) => {
     case ADD_CAR: {
       return {
         ...state,
-        carErrors: null,
         user: {
           ...state.user,
           cars: [...state.user.cars, action.car],
@@ -172,13 +167,6 @@ const usersReducer = (state = initialState, action) => {
           ...state.user,
           cars: state.user.cars,
         },
-      };
-    }
-    case CAR_ERROR: {
-      console.log(action.errors);
-      return {
-        ...state,
-        carErrors: action.errors,
       };
     }
     default:

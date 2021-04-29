@@ -24,6 +24,7 @@ import {
 } from '../store/actions/locations';
 import CarChoice from '../screens/CarChoice';
 import FocusAwareStatusBar from '../components/FocusAwareStatusBar';
+import auth from '@react-native-firebase/auth';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -131,12 +132,18 @@ class ParkingAreaDetailScreen extends React.Component {
                     style={{paddingVertical: 10, borderRadius: 10}}
                     underlayColor="whitesmoke">
                     <View style={styles.row}>
-                      <TextComp black style={{fontSize: 16}}>
-                        Vehicle
-                      </TextComp>
-                      <TextComp style={{color: 'grey'}}>
-                        {activeCar.make} {activeCar.model}
-                      </TextComp>
+                      <View>
+                        <TextComp black style={{fontSize: 16}}>
+                          Vehicle
+                        </TextComp>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TextComp style={{color: 'grey', marginRight: 5}}>
+                          {activeCar.make} {activeCar.model}
+                        </TextComp>
+                        <FontAwesome name="pencil" color="grey" />
+                      </View>
                     </View>
                   </TouchableHighlight>
                   <View>
@@ -157,6 +164,7 @@ class ParkingAreaDetailScreen extends React.Component {
                     alignItems: 'center',
                   }}>
                   {this.props.didReserve ||
+                  !auth().currentUser.emailVerified ||
                   this.state.activeArea.availableSpots == 0 ||
                   !this.props.nearby.find(
                     (loc) => loc.name === parking.name,
@@ -175,6 +183,8 @@ class ParkingAreaDetailScreen extends React.Component {
                               (loc) => loc.name === parking.name,
                             )
                           ? 'Out of Range'
+                          : !auth().currentUser.emailVerified
+                          ? 'Email not verified'
                           : 'Area is FULL'}
                       </TextComp>
                     </View>
@@ -310,8 +320,8 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 5,
     borderRadius: 15,
-    width: SCREEN_WIDTH / 3.42,
-    height: SCREEN_WIDTH / 3.42,
+    width: SCREEN_WIDTH * 0.29,
+    height: SCREEN_WIDTH * 0.29,
     justifyContent: 'center',
     alignItems: 'center',
   },

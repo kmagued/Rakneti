@@ -156,7 +156,13 @@ class CarChoiceScreen extends React.Component {
               onPress={() =>
                 this.props
                   .add(this.props.user.uid, this.state.details)
-                  .then(() => this.setState({visible: false}))
+                  .then(() => {
+                    if (!this.props.errors) {
+                      this.setState({visible: false});
+                    } else {
+                      console.log(this.props.errors);
+                    }
+                  })
               }>
               <TextComp bold style={{color: 'white', fontSize: 16}}>
                 Save
@@ -266,6 +272,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   user: state.users.user,
+  errors: state.users.carErrors,
 });
 
 const mapDispatchToProps = {

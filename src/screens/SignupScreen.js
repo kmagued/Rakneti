@@ -43,6 +43,7 @@ class SignupScreen extends React.Component {
           mobile: this.state.mobile,
           fullName: this.state.fullName,
         });
+        res.user.sendEmailVerification();
       })
       .catch((error) => {
         if (!this.state.email) this.setState({emailError: 'Enter email'});
@@ -87,6 +88,7 @@ class SignupScreen extends React.Component {
             {/* Inputs */}
             <View style={{marginVertical: 30}}>
               <Input
+                autoFocus
                 icon={<Ionicons name="md-mail" size={18} />}
                 placeholder="E-mail"
                 value={this.state.email}

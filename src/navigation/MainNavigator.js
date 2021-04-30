@@ -28,6 +28,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Colors from '../constants/Colors';
 import {useSelector} from 'react-redux';
 import SearchScreen from '../screens/SearchScreen';
+import ArrivedScreen from '../screens/ArrivedScreen';
 
 const AuthStackNavigator = createStackNavigator();
 
@@ -61,6 +62,7 @@ export const HomeNavigator = () => {
       />
       <HomeStackNavigator.Screen name="ParkingAreas" component={ParkingAreas} />
       <HomeStackNavigator.Screen name="Map" component={MapScreen} />
+      <HomeStackNavigator.Screen name="Arrived" component={ArrivedScreen} />
     </HomeStackNavigator.Navigator>
   );
 };

@@ -15,6 +15,7 @@ import {
   RESERVE_PLACE,
   CANCEL,
   DID_RESERVE,
+  DID_ARRIVE,
 } from '../actions/locations';
 
 const initialState = {
@@ -26,6 +27,7 @@ const initialState = {
   reservedPlace: null,
   reservedArea: null,
   reservationDate: null,
+  didArrive: false,
 };
 
 const usersReducer = (state = initialState, action) => {
@@ -128,6 +130,13 @@ const usersReducer = (state = initialState, action) => {
         reservedArea: Object.values(location.parkingAreas).find(
           (area) => area.name === action.reservation.area,
         ),
+      };
+    }
+    case DID_ARRIVE: {
+      return {
+        ...state,
+        didReserve: false,
+        didArrive: true,
       };
     }
     case OPEN_CAR_SCREEN: {

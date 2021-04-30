@@ -11,7 +11,11 @@ import {
 import Colors from '../constants/Colors';
 import TextComp from '../components/TextComp';
 import {getLocations} from '../store/actions/locations';
-import {getUserLocation, didReserveSpot} from '../store/actions/locations';
+import {
+  getUserLocation,
+  didReserveSpot,
+  didArrive,
+} from '../store/actions/locations';
 import {connect} from 'react-redux';
 import SwipeList from 'react-native-swiper-flatlist';
 import FeaturedLocation from '../components/FeaturedLocation';
@@ -81,11 +85,14 @@ class HomeScreen extends React.Component {
       this.props.getUserLocation();
       this.setState({
         featuredLocation: this.props.locations.find(
-          (location) => location.name === 'Downtown Mall',
+          (location) => location.name === 'Cairo Festival City',
         ),
         loading: false,
       });
     });
+    setInterval(() => {
+      this.props.didArrive(this.props.user.uid);
+    }, 500);
   }
 
   shuffle = (array) => array.sort(() => Math.random() - 0.5);
@@ -206,12 +213,14 @@ const mapStateToProps = (state) => ({
   userLocation: state.locations.userLocation,
   nearby: state.locations.nearbyLocations,
   user: state.users.user,
+  arrived: state.users.didArrive,
 });
 
 const mapDispatchToProps = {
   get: getLocations,
   getUserLocation,
   didReserveSpot,
+  didArrive,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

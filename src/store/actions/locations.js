@@ -12,6 +12,7 @@ export const CANCEL = 'CANCEL';
 export const SET_NEARBY_LOCATIONS = 'SET_NEARBY_LOCATIONS';
 export const SET_CURRENT_MARKER = 'SET_CURRENT_MARKER';
 export const DID_RESERVE = 'DID_RESERVE';
+export const DID_ARRIVE = 'DID_ARRIVE';
 
 import Geolocation from 'react-native-geolocation-service';
 import {Platform} from 'react-native';
@@ -125,7 +126,7 @@ export const addLocation = (name, address, image, coords, areas) => async (
     });
 };
 
-export const reserveLocation = (place, area, index, uid) => async (
+export const reserveLocation = (place, area, index, uid, LP) => async (
   dispatch,
 ) => {
   firebase
@@ -147,12 +148,16 @@ export const reserveLocation = (place, area, index, uid) => async (
               Object.values(value)[0].parkingAreas[index].availableSpots - 1,
           })
           .then(() => {
-            firebase.database().ref(`reservations/${uid}`).set({
-              place: place.name,
-              area: area.name,
-              time: Date().toString(),
-              arrived: false,
-            });
+            firebase
+              .database()
+              .ref(`reservations/${uid}`)
+              .set({
+                place: place.name,
+                area: area.name,
+                time: Date().toString(),
+                arrived: 0,
+                LP: LP.replace(/\s+/g, ''),
+              });
           });
       }
     });
@@ -269,5 +274,16 @@ export const didReserveSpot = (uid, locations) => async (dispatch) => {
           locations,
         });
       }
+    });
+};
+
+export const didArrive = (uid) => async (dispatch) => {
+  return firebase
+    .database()
+    .ref(`reservations/${uid}`)
+    .on('child_changed', () => {
+      dispatch({
+        type: DID_ARRIVE,
+      });
     });
 };

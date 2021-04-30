@@ -190,6 +190,7 @@ class ParkingAreaDetailScreen extends React.Component {
                             this.state.activeArea,
                             this.state.index,
                             this.props.user.uid,
+                            activeCar.licensePlate,
                           )
                           .then(() => {
                             this.props.navigation.reset({

@@ -117,8 +117,8 @@ class ParkingAreaDetailScreen extends React.Component {
                     <TextComp
                       bold
                       style={{fontSize: 32, color: Colors.secondary}}>
-                      {this.state.activeArea.numberOfSpots -
-                        this.state.activeArea.availableSpots}
+                      {this.state.activeArea.reserved +
+                        this.state.activeArea.occupied}
                       <TextComp style={{color: 'grey', fontSize: 24}}>
                         /{this.state.activeArea.numberOfSpots}
                       </TextComp>
@@ -260,6 +260,10 @@ class ParkingAreaDetailScreen extends React.Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginHorizontal: 10,
+                justifyContent:
+                  parking.parkingAreas.length % 3 === 0
+                    ? 'center'
+                    : 'flex-start',
               }}>
               {Object.values(parking.parkingAreas).map((area, index) => (
                 <TouchableOpacity
@@ -276,7 +280,7 @@ class ParkingAreaDetailScreen extends React.Component {
                   <TextComp style={styles.areaNameText}>{area.name}</TextComp>
                   <View>
                     <TextComp bold style={{fontSize: 22, color: 'grey'}}>
-                      {area.numberOfSpots - area.availableSpots}
+                      {area.occupied + area.reserved}
                       <TextComp style={{fontSize: 14}}>
                         /{area.numberOfSpots}
                       </TextComp>
@@ -308,11 +312,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   areaContainer: {
-    padding: 20,
+    padding: 10,
     margin: 5,
     borderRadius: 15,
-    width: SCREEN_WIDTH / 3.42,
-    height: SCREEN_WIDTH / 3.42,
+    width: SCREEN_WIDTH / 3.5,
+    height: SCREEN_WIDTH / 3.5,
     justifyContent: 'center',
     alignItems: 'center',
   },

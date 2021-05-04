@@ -34,7 +34,7 @@ const Location = (props) => (
         height: 55,
       }}>
       <View style={{width: '90%'}}>
-        <TextComp bold style={{fontSize: 22, marginBottom: 2}}>
+        <TextComp bold style={{fontSize: 18, marginBottom: 2}}>
           {props.place.name}
         </TextComp>
         <TextComp style={styles.addressText}>{props.place.address}</TextComp>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
   },
   imageContainer: {
-    height: 170,
+    height: SCREEN_WIDTH / 2.5,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     color: 'grey',
-    fontSize: 13,
+    fontSize: 11,
   },
 });
 

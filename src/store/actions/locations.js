@@ -143,9 +143,7 @@ export const reserveLocation = (place, area, index, uid, LP) => async (
           .database()
           .ref(`locations/${key}/parkingAreas/${index}`)
           .update({
-            ...area,
-            availableSpots:
-              Object.values(value)[0].parkingAreas[index].availableSpots - 1,
+            reserved: Object.values(value)[0].parkingAreas[index].reserved + 1,
           })
           .then(() => {
             firebase
@@ -187,9 +185,7 @@ export const cancelReservation = (place, area, index, uid) => async (
           .database()
           .ref(`locations/${key}/parkingAreas/${index}`)
           .update({
-            ...area,
-            availableSpots:
-              Object.values(value)[0].parkingAreas[index].availableSpots + 1,
+            reserved: Object.values(value)[0].parkingAreas[index].reserved - 1,
           })
           .then(() => {
             firebase

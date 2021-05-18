@@ -1,0 +1,13 @@
+[debug] [2021-05-04T22:49:05.580Z] ----------------------------------------------------------------------
+[debug] [2021-05-04T22:49:05.582Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2021-05-04T22:49:05.583Z] CLI Version:   9.10.0
+[debug] [2021-05-04T22:49:05.583Z] Platform:      darwin
+[debug] [2021-05-04T22:49:05.583Z] Node Version:  v12.14.0
+[debug] [2021-05-04T22:49:05.584Z] Time:          Wed May 05 2021 00:49:05 GMT+0200 (Eastern European Standard Time)
+[debug] [2021-05-04T22:49:05.584Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-05-04T22:49:05.593Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-05-04T22:49:05.593Z] > authorizing via signed-in user (rakneti.taksy@gmail.com)
+[debug] [2021-05-04T22:49:05.593Z] [iam] checking project rakneti for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2021-05-04T22:49:05.595Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/rakneti:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}

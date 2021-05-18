@@ -2,7 +2,7 @@ import React from 'react';
 import {useSelector} from 'react-redux';
 import {NavigationContainer} from '@react-navigation/native';
 
-import {AuthNavigator, Drawer, TabNavigator} from '../navigation/MainNavigator';
+import {AuthNavigator, TabNavigator} from '../navigation/MainNavigator';
 import LoadingScreen from '../screens/LoadingScreen';
 
 const AppNavigator = (props) => {

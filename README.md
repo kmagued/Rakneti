@@ -33,3 +33,9 @@ cd .. && react-native link
   ```
   react-native run-ios
   ```
+  
+## Contributing
+Issue Tracker: https://github.com/kmagued/Rakneti/issues
+
+## Contact 
+Email us on rakneti.taksy@gmail.com for any inquiries about the system

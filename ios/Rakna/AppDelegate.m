@@ -30,6 +30,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  // Google Maps Key
   [GMSServices provideAPIKey:@"AIzaSyBbMEgv98fwlT8CL5V5HmaxzVYgpG6g4gI"]; //ADD THIS
   
   if ([FIRApp defaultApp] == nil) {

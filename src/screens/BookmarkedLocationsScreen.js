@@ -50,7 +50,7 @@ class BookmarkedLocationsScreen extends React.Component {
         <SafeAreaView style={styles.screen}>
           <View style={styles.headerContainer}>
             <TextComp bold style={{color: Colors.secondary, fontSize: 20}}>
-              Favorites
+              Bookmarks
             </TextComp>
           </View>
           <FlatList

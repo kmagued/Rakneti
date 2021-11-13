@@ -13,7 +13,7 @@ import Colors from '../constants/Colors';
 import {connect} from 'react-redux';
 import {addLocation} from '../store/actions/locations';
 
-Area = (props) => {
+const Area = (props) => {
   const [numSpots, setNumSpots] = useState(null);
   const [availableSpots, setAvailableSpots] = useState(null);
   const [name, setName] = useState('');
@@ -67,7 +67,6 @@ Area = (props) => {
     </>
   );
 };
-
 class AddLocation extends React.Component {
   state = {
     areas: [{name: '', numberOfSpots: null, availableSpots: null}],
